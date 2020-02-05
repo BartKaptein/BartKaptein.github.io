@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>Wandelkaart</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
 <script src="https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
@@ -22,7 +23,7 @@ z-index: 1;
 top: 50px;
 right: 10px;
 border-radius: 3px;
-width: 120px;
+width: 200px;
 border: 1px solid rgba(0, 0, 0, 0.4);
 font-family: 'Open Sans', sans-serif;
 }
@@ -90,6 +91,16 @@ var bounds = [
 
 var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
 
+// Add AJAX request for data GEOjson route file...
+var route = $.ajax({
+	url:"https://bartkaptein.github.io/Klinkerbergerplas.geojson",
+    dataType: "json",
+    success: console.log("Route data successfully loaded."),
+    error: function (xhr) {
+		alert(xhr.statusText)
+    }
+})
+
 var map = new mapboxgl.Map({
 	container: 'map', // container id
 	style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
@@ -100,9 +111,6 @@ var map = new mapboxgl.Map({
 //	maxBounds: bounds
 });
 
-
-
-// Add a layer with GJSON Data...
 map.on('load', function() {
 
 	map.addSource('route', {
@@ -125,8 +133,14 @@ map.on('load', function() {
 	});
 	
 	map.fitBounds(bounds);
-
+	
 });
+
+// Calculate Route Distance...
+// This calculation starts as soon as the route has been loaded...
+
+$.when(route).done(function() {
+    var routeDistance = (JSON.stringify(turf.lineDistance(route.responseJSON.features[0]).toLocaleString()));
 
 // Add Menu
 /////////////////////////////////////////////////////////////////////
@@ -138,7 +152,7 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 	var link = document.createElement('a');
 	link.href = '#';
 	link.className = 'active';
-	link.textContent = id;
+	link.textContent = id + " (" + routeDistance + " KM)";
  
 	link.onclick = function(e) {
 		var clickedLayer = this.textContent;
@@ -159,7 +173,7 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 var layers = document.getElementById('menu');
 layers.appendChild(link);
 }
-
+});	
 
 // Add geolocate control to the map.
 ///////////////////////////////////////////////////////////////////////
@@ -172,16 +186,18 @@ map.addControl(
 	})
 );
 
+
+
 if (debug == true) {
 	
 	// The DEBUG Container...
 	document.write("<pre id=\"debug\"></pre>");
 	
+
+	
 	// Add show mouse location to the map.
 	map.on('mousemove', function(e) {
-	
-		r = map.getSource('route');
-//		r = fetch('https://bartkaptein.github.io/Klinkerbergerplas.geojson')
+
 		document.getElementById('debug').innerHTML =
 		// e.point is the x, y coordinates of the mousemove event relative
 		// to the top-left corner of the map
@@ -189,11 +205,7 @@ if (debug == true) {
 		'<br />' +
 		// e.lngLat is the longitude, latitude geographical position of the event
 		JSON.stringify(e.lngLat.wrap()) +
-		'<br />' +
-		'Total distance: ' +
-		JSON.stringify(r) +
-//        JSON.stringify(turf.lineDistance(r).toLocaleString()) +
-        'km';
+		'<br />' 
 	});
 }
 
