@@ -12,6 +12,17 @@
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
 </style>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
+<link
+rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
+type="text/css"
+/>
+
+
+
+
 </head>
 <body>
 
@@ -70,12 +81,42 @@ font-size: 12px;
 text-align: center;
 color: #222;
 background: #fff;
+}
+
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #export, #updateDataset {
+            position: absolute;
+            top:200px;
+            left:10px;
+            z-index:100;
+            background-color:white;
+            color:black;
+            padding:6px;
+            border-radius:4px;
+            font-family: 'Helvetica Neue';
+            cursor: pointer;
+            font-size:12px;
+            text-decoration:none;
+            background-image: url(icon.png);
+            background-repeat: no-repeat;
+            background-position: -4245px -3px;
+            height: 20px;
+            width: 20px;
+        }
+        #export:hover, #updateDataset:hover {
+            background-color: #ddd;
+        }
+        #updateDataset {
+            background-position: -4324px -3px;
+            top: 240px;
+        }
 </style>
 
 
 <nav id="menu"></nav>
 <div id="map"></div>
-
+<a href='#' id='export'></a>
+<a href="#" id='updateDataset'></a>
 
 
 <script>
@@ -90,69 +131,111 @@ var bounds = [
 ];
 
 var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
-
-// Add AJAX request for data GEOjson route file...
-var route = $.ajax({
-	url:"https://bartkaptein.github.io/Klinkerbergerplas.geojson",
-    dataType: "json",
-    success: console.log("Route data successfully loaded."),
-    error: function (xhr) {
-		alert(xhr.statusText)
-    }
-})
+var datasetId = "Klinkerbergerplas";
 
 var map = new mapboxgl.Map({
 	container: 'map', // container id
 	style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
 	//style: 'mapbox://styles/bartkaptein/ck5wzyfg61bnc1in2ij01rcdy',
-	// Set bounds to New York, New York
 	center: center, // starting position [lng, lat]
 	zoom: 9 // starting zoom
 //	maxBounds: bounds
 });
 
+var Draw = new MapboxDraw();
+
+map.addControl(Draw, 'top-left');
+
+
 map.on('load', function() {
 
-	map.addSource('route', {
-		type: 'geojson',
-		data: 'https://bartkaptein.github.io/Klinkerbergerplas.geojson'
-	});
-	
-	map.addLayer({
-		'id': 'route',
-		'type': 'line',
-		'source': 'route',
-		'layout': {
-			'line-join': 'round',
-			'line-cap': 'round'
-		},
-		'paint': {
-			'line-color': '#888',
-			'line-width': 8
-		}
-	});
-	
+	addLayerData(datasetId);
+
 	map.fitBounds(bounds);
 	
+    document.getElementById('export').onclick = function(e) {
+		// Extract GeoJson from featureGroup
+		var data = Draw.getAll();
+
+		if (data.features.length > 0) {
+			// Stringify the GeoJson
+			var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+
+			// Create export
+				document.getElementById('export').setAttribute('href', 'data:' + convertedData);
+				document.getElementById('export').setAttribute('download','data.geojson');    
+		} else {
+			alert("Wouldn't you like to draw some data?");
+		}
+    }
+    document.getElementById('updateDataset').onclick = function(e) {
+		e.preventDefault();
+		uploadLayerData();
+    }
 });
+
+
+function addLayerData(datasetId) {
+	// Loads a geoJsonfile using ajax
+    $.ajax({
+      url : 'https://bartkaptein.github.io/' + datasetId + '.geojson',
+      type : 'GET',
+      dataType: 'json',
+	  success: console.log("Route data successfully loaded."),
+      error: function (xhr) {
+		alert(xhr.statusText)
+      }
+    })
+    .done(function(result){
+	// When loading is done
+        var geoJsonFeatures = result;
+		addRoute(datasetId,geoJsonFeatures);
+		return geoJsonFeatures;
+    });
+	// End addLayerData
+}
+
+function uploadLayerData(){
+	Draw = getLayerData(datasetId);
+//    var drawnData = Draw.getAll();
+//    for(i = 0; i < drawnData.features.length; i++){
+
+//        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+//        xmlhttp.open("POST", 'https://evening-sierra-80988.herokuapp.com/dataset');
+//        xmlhttp.setRequestHeader("Content-Type", "application/json");
+//        xmlhttp.send(JSON.stringify({"feature":drawnData.features[i], "datasetId": "cirqs92m00hu8fgm8piqgihok"}));
+
+//        xmlhttp.onreadystatechange = function() {
+//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 && i == drawnData.features.length) {
+//            alert('upload successful!');
+
+//            getData(datasetId);
+//        } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200){
+//            alert('looks like something went wrong');
+//        }
+//    };
+//    }
+}
 
 // Calculate Route Distance...
 // This calculation starts as soon as the route has been loaded...
 
-$.when(route).done(function() {
-    var routeDistance = (JSON.stringify(turf.lineDistance(route.responseJSON.features[0]).toLocaleString()));
+//$.when(route).done(function() {
+//    var routeDistance = (JSON.stringify(turf.lineDistance(route.responseJSON.features[0]).toLocaleString()));
 
 // Add Menu
 /////////////////////////////////////////////////////////////////////
-var toggleableLayerIds = ['route'];
- 
-for (var i = 0; i < toggleableLayerIds.length; i++) {
-	var id = toggleableLayerIds[i];
+var toggleableLayerIds = [];
+
+function addLayer(id)
+{ 
+//for (var i = 0; i < toggleableLayerIds.length; i++) {
+//	var id = toggleableLayerIds[i];
  
 	var link = document.createElement('a');
 	link.href = '#';
 	link.className = 'active';
-	link.textContent = id + " (" + routeDistance + " KM)";
+	link.textContent = id;
  
 	link.onclick = function(e) {
 		var clickedLayer = this.textContent;
@@ -172,8 +255,9 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
  
 var layers = document.getElementById('menu');
 layers.appendChild(link);
-}
-});	
+};
+
+//});	
 
 // Add geolocate control to the map.
 ///////////////////////////////////////////////////////////////////////
@@ -186,7 +270,38 @@ map.addControl(
 	})
 );
 
-
+// Draw the Map Matching route as a new layer on the map
+function addRoute(route, geoJsonData) {
+	// If a route is already loaded, remove it
+	if (map.getSource(route)) {
+		map.removeLayer(route)
+		map.removeSource(route)
+	} else {
+		map.addLayer({
+			"id": route,
+			"type": "line",
+			"source": {
+				"type": "geojson",
+				"data": geoJsonData
+			},
+			"layout": {
+				"line-join": "round",
+				"line-cap": "round"
+			},
+			"paint": {
+				"line-color": "#03AA46",
+				"line-width": 8,
+				"line-opacity": 0.8
+			}
+		});
+		console.log("Route " + datasetId + " successfully added.");
+		// Calculate the route distance
+	    var routeDistance = (JSON.stringify(turf.lineDistance(geoJsonData.features[0]).toLocaleString()));
+        // Add the menuItem for this route...
+		var layerID = datasetId + " (" + routeDistance + " KM)";
+		addLayer(layerID);
+	};
+}
 
 if (debug == true) {
 	
