@@ -5,8 +5,8 @@
 			"id": "1",
 			"type": "Feature",
 			"properties": {
-			    title: 'Linksaf',
-				description: 'Linksaf het voetpad op.'
+			    "title": "Linksaf",
+				"description": "Linksaf het voetpad op."
 			},
 			"geometry": {
 				"coordinates": [
@@ -20,8 +20,8 @@
 			"id": "2",
 			"type": "Feature",
 			"properties": {
-			    title: 'Rechtdoor',
-				description: 'Rechtdoor de weg volgen.'
+			    "title": "Rechtdoor",
+				"description": "Rechtdoor de weg volgen."
 			},
 			"geometry": {
 				"coordinates": [
@@ -35,8 +35,8 @@
 			"id": "3",
 			"type": "Rechtsaf",
 			"properties": {
-			    title: 'Oversteken',
-				description: 'Steek de straat over.'
+			    "title": "Oversteken",
+				"description": "Steek de straat over."
 			},
 			"geometry": {
 				"coordinates": [
@@ -50,8 +50,8 @@
 			"id": "4",
 			"type": "Feature",
 			"properties": {
-			    title: 'Stoppen',
-				description: 'Stop hier even en kijk om je heen...'
+			    "title": "Stoppen",
+				"description": "Stop hier even en kijk om je heen..."
 			},
 			"geometry": {
 				"coordinates": [
