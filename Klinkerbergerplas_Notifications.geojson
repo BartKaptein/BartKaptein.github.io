@@ -5,6 +5,9 @@
 			"id": "1",
 			"type": "Feature",
 			"properties": {
+			        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
 				"title": "Linksaf",
 				"description": "Linksaf het voetpad op."
 			},
@@ -20,6 +23,9 @@
 			"id": "2",
 			"type": "Feature",
 			"properties": {
+			        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
 				"title": "Rechtdoor",
 				"description": "Rechtdoor de weg volgen."
 			},
@@ -35,6 +41,9 @@
 			"id": "3",
 			"type": "Rechtsaf",
 			"properties": {
+			        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
 				"title": "Oversteken",
 				"description": "Steek de straat over."
 			},
@@ -50,6 +59,9 @@
 			"id": "4",
 			"type": "Feature",
 			"properties": {
+			        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
 				"title": "Stoppen",
 				"description": "Stop hier even en kijk om je heen..."
 			},
