@@ -11,6 +11,15 @@
 <style>
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+	.marker {
+		background-image: url('mapbox-icon.png');
+		background-size: cover;
+		width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	cursor: pointer;
+	}
+}
 </style>
 
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
@@ -176,7 +185,7 @@ map.on('load', function() {
 
 
 function addLayerData(datasetId) {
-	// Loads a geoJsonfile using ajax
+	// Loads a geoJsonfile route using ajax
     $.ajax({
       url : 'https://bartkaptein.github.io/' + datasetId + '.geojson',
       type : 'GET',
@@ -192,6 +201,26 @@ function addLayerData(datasetId) {
 		addRoute(datasetId,geoJsonFeatures);
 		return geoJsonFeatures;
     });
+	// End Loads a geoJsonfile route using ajax
+	
+	// Loads a geoJsonfile notifications file using ajax
+    $.ajax({
+      url : 'https://bartkaptein.github.io/' + datasetId + '_Notifications.geojson',
+      type : 'GET',
+      dataType: 'json',
+	  success: console.log("Notifications data successfully loaded."),
+      error: function (xhr) {
+		alert(xhr.statusText)
+      }
+    })
+    .done(function(result){
+	// When loading is done
+        var geoJsonFeatures = result;
+		addNotifications(datasetId,geoJsonFeatures);
+		return geoJsonFeatures;
+    });
+	// End Loads a geoJsonfile route using ajax
+	
 	// End addLayerData
 }
 
@@ -272,13 +301,19 @@ map.addControl(
 
 // Draw the Map Matching route as a new layer on the map
 function addRoute(route, geoJsonData) {
-	// If a route is already loaded, remove it
-	if (map.getSource(route)) {
-		map.removeLayer(route)
-		map.removeSource(route)
+
+	// Calculate the route distance
+    var routeDistance = (JSON.stringify(turf.lineDistance(geoJsonData.features[0]).toLocaleString()));
+	// Add the menuItem for this route...
+	var layerID = datasetId + " (" + routeDistance + " KM)";
+
+	// If a layerID is already loaded, remove it
+	if (map.getSource(layerID)) {
+		map.removeLayer(layerID)
+		map.removeSource(layerID)
 	} else {
 		map.addLayer({
-			"id": route,
+			"id": layerID,
 			"type": "line",
 			"source": {
 				"type": "geojson",
@@ -294,14 +329,29 @@ function addRoute(route, geoJsonData) {
 				"line-opacity": 0.8
 			}
 		});
-		console.log("Route " + datasetId + " successfully added.");
-		// Calculate the route distance
-	    var routeDistance = (JSON.stringify(turf.lineDistance(geoJsonData.features[0]).toLocaleString()));
-        // Add the menuItem for this route...
-		var layerID = datasetId + " (" + routeDistance + " KM)";
+		console.log("Route " + layerID + " successfully added.");
 		addLayer(layerID);
 	};
 }
+
+// Draw the Map Matching notifications as a new layer on the map
+function addNotifications(notifications, geoJsonData) {
+
+	// add markers to map
+	geoJsonData.features.forEach(function(marker) {
+
+	// create a HTML element for each feature
+	var el = document.createElement('div');
+	el.className = 'marker';
+
+	// make a marker for each feature and add to the map
+	new mapboxgl.Marker(el)
+		.setLngLat(marker.geometry.coordinates)
+		.addTo(map);
+	console.log("Marker " + marker.id + " successfully added.");
+	});
+}
+
 
 if (debug == true) {
 	
