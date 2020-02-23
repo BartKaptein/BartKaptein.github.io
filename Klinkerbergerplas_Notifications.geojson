@@ -7,7 +7,7 @@
 			"properties": {
 			        "marker-color": "#7e7e7e",
         "marker-size": "medium",
-        "marker-symbol": "",
+        "marker-symbol": "ZW",
 				"title": "Linksaf",
 				"description": "Linksaf het voetpad op."
 			},
@@ -25,7 +25,7 @@
 			"properties": {
 			        "marker-color": "#7e7e7e",
         "marker-size": "medium",
-        "marker-symbol": "",
+        "marker-symbol": "N",
 				"title": "Rechtdoor",
 				"description": "Rechtdoor de weg volgen."
 			},

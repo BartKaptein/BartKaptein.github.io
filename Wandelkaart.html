@@ -29,12 +29,16 @@
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
 	.marker {
-		background-image: url('mapbox-icon.png');
+		background-image: url('icons/mapbox-icon.png');
 		background-size: cover;
 		width: 50px;
 		height: 50px;
 		border-radius: 50%;
 		cursor: pointer; 
+	}
+	
+	#markerN {
+		background-image: url('icons/N.png');
 	}
 	
 	.mapboxgl-popup {
@@ -358,7 +362,16 @@ function addNotifications(notifications, geoJsonData) {
 		// create a HTML element for each feature
 		var el = document.createElement('div');
 		el.className = 'marker';
-
+		
+		switch (marker.properties.symbol) {
+			case 'N':
+				el.id = 'markerN';
+			break;
+			case 'ZW':
+				el.id = 'markerZW';
+			break;
+		}
+		
 		// make a marker for each feature and add to the map
 		new mapboxgl.Marker(el)
 		.setLngLat(marker.geometry.coordinates)
@@ -366,7 +379,7 @@ function addNotifications(notifications, geoJsonData) {
 		.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
 		.setRotationAlignment("map")
 		.addTo(map);
-		console.log("Marker " + marker.id + " successfully added.");
+		console.log("Marker " + marker.id + " " + marker.properties.symbol + " successfully added.");
 	});
 }
 
