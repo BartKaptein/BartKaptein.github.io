@@ -43,7 +43,7 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "",
+				"marker-symbol": "N",
 				"title": "Oversteken",
 				"description": "Steek de straat over."
 			},
@@ -61,7 +61,7 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "",
+				"marker-symbol": "ZW",
 				"title": "Stoppen",
 				"description": "Stop hier even en kijk om je heen..."
 			},

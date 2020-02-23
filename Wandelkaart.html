@@ -41,6 +41,10 @@
 		background-image: url('icons/N.png');
 	}
 	
+	#markerZW {
+		background-image: url('icons/ZW.png');
+	}
+	
 	.mapboxgl-popup {
 		max-width: 200px;
 	}
@@ -167,6 +171,17 @@ var map = new mapboxgl.Map({
 // Add zoom and rotation controls to the map.
 //////////////////////////////////////////////
 map.addControl(new mapboxgl.NavigationControl());
+
+// Toggle the notification (direction) markers
+// based on zoom level...
+///////////////////////////////////////////////
+map.on('zoom', function() {
+	if (map.getZoom() > 17) {
+		$( ".marker" ).show();
+	} else {
+		$( ".marker" ).hide();
+	}
+});
 
 // Add geolocate control to the map.
 ///////////////////////////////////////////////////////////////////////
@@ -363,7 +378,7 @@ function addNotifications(notifications, geoJsonData) {
 		var el = document.createElement('div');
 		el.className = 'marker';
 		
-		switch (marker.properties.symbol) {
+		switch (marker.properties['marker-symbol']) {
 			case 'N':
 				el.id = 'markerN';
 			break;
@@ -379,7 +394,7 @@ function addNotifications(notifications, geoJsonData) {
 		.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
 		.setRotationAlignment("map")
 		.addTo(map);
-		console.log("Marker " + marker.id + " " + marker.properties.symbol + " successfully added.");
+		console.log("Marker " + marker.id + " " + marker.properties['marker-symbol'] + " successfully added.");
 	});
 }
 
