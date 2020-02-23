@@ -9,126 +9,127 @@
 <script src="https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
 <style>
+
 	body { margin: 0; padding: 0; }
+
+	#debug {
+		display: block;
+		position: relative;
+		margin: 0px auto;
+		width: 50%;
+		padding: 10px;
+		border: none;
+		border-radius: 3px;
+		font-size: 12px;
+		text-align: center;
+		color: #222;
+		background: #fff;
+	}
+
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
 	.marker {
 		background-image: url('mapbox-icon.png');
 		background-size: cover;
 		width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	cursor: pointer; 
+		height: 50px;
+		border-radius: 50%;
+		cursor: pointer; 
 	}
+	
 	.mapboxgl-popup {
-	max-width: 200px;
+		max-width: 200px;
 	}
 
 	.mapboxgl-popup-content {
-	text-align: center;
-	font-family: 'Open Sans', sans-serif;
+		text-align: center;
+		font-family: 'Open Sans', sans-serif;
 	}
-}
+
+	/* Style for the top right menu */
+	#menu {
+		background: #fff;
+		position: absolute;
+		z-index: 1;
+		top: 10px;
+		right: 50px;
+		border-radius: 3px;
+		width: 200px;
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		font-family: 'Open Sans', sans-serif;
+	}
+ 
+	#menu a {
+		font-size: 13px;
+		color: #404040;
+		display: block;
+		margin: 0;
+		padding: 0;
+		padding: 10px;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+		text-align: center;
+	}
+ 
+	#menu a:last-child {
+		border: none;
+	}
+	 
+	#menu a:hover {
+		background-color: #f8f8f8;
+		color: #404040;
+	}
+	 
+	#menu a.active {
+		background-color: #3887be;
+		color: #ffffff;
+	}
+	 
+	#menu a.active:hover {
+		background: #3074a4;
+	}
+
+	/* Style for the extra buttons left... */
+	#export, #updateDataset {
+		position: absolute;
+		top:200px;
+		left:10px;
+		z-index:100;
+		background-color:white;
+		color:black;
+		padding:6px;
+		border-radius:4px;
+		font-family: 'Helvetica Neue';
+		cursor: pointer;
+		font-size:12px;
+		text-decoration:none;
+		background-image: url(icon.png);
+		background-repeat: no-repeat;
+		background-position: -4245px -3px;
+		height: 20px;
+		width: 20px;
+	}
+	#export:hover, #updateDataset:hover {
+		background-color: #ddd;
+	}
+	#updateDataset {
+		background-position: -4324px -3px;
+		top: 240px;
+	}
+
 </style>
 
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
 <link
-rel="stylesheet"
-href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
-type="text/css"
+	rel="stylesheet"
+	href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
+	type="text/css"
 />
 
-
-
-
 </head>
+
+
 <body>
-
-<style>
-#menu {
-background: #fff;
-position: absolute;
-z-index: 1;
-top: 50px;
-right: 10px;
-border-radius: 3px;
-width: 200px;
-border: 1px solid rgba(0, 0, 0, 0.4);
-font-family: 'Open Sans', sans-serif;
-}
- 
-#menu a {
-font-size: 13px;
-color: #404040;
-display: block;
-margin: 0;
-padding: 0;
-padding: 10px;
-text-decoration: none;
-border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-text-align: center;
-}
- 
-#menu a:last-child {
-border: none;
-}
- 
-#menu a:hover {
-background-color: #f8f8f8;
-color: #404040;
-}
- 
-#menu a.active {
-background-color: #3887be;
-color: #ffffff;
-}
- 
-#menu a.active:hover {
-background: #3074a4;
-}
-
-#debug {
-display: block;
-position: relative;
-margin: 0px auto;
-width: 50%;
-padding: 10px;
-border: none;
-border-radius: 3px;
-font-size: 12px;
-text-align: center;
-color: #222;
-background: #fff;
-}
-
-        #map { position:absolute; top:0; bottom:0; width:100%; }
-        #export, #updateDataset {
-            position: absolute;
-            top:200px;
-            left:10px;
-            z-index:100;
-            background-color:white;
-            color:black;
-            padding:6px;
-            border-radius:4px;
-            font-family: 'Helvetica Neue';
-            cursor: pointer;
-            font-size:12px;
-            text-decoration:none;
-            background-image: url(icon.png);
-            background-repeat: no-repeat;
-            background-position: -4245px -3px;
-            height: 20px;
-            width: 20px;
-        }
-        #export:hover, #updateDataset:hover {
-            background-color: #ddd;
-        }
-        #updateDataset {
-            background-position: -4324px -3px;
-            top: 240px;
-        }
-</style>
-
 
 <nav id="menu"></nav>
 <div id="map"></div>
@@ -159,10 +160,26 @@ var map = new mapboxgl.Map({
 //	maxBounds: bounds
 });
 
+// Add zoom and rotation controls to the map.
+//////////////////////////////////////////////
+map.addControl(new mapboxgl.NavigationControl());
+
+// Add geolocate control to the map.
+///////////////////////////////////////////////////////////////////////
+map.addControl(
+	new mapboxgl.GeolocateControl({
+		positionOptions: {
+			enableHighAccuracy: true
+		},
+		trackUserLocation: true
+	})
+);
+
+
+// Add the draw buttons on the top left location...
+////////////////////////////////////////////////////
 var Draw = new MapboxDraw();
-
 map.addControl(Draw, 'top-left');
-
 
 map.on('load', function() {
 
@@ -204,7 +221,7 @@ function addLayerData(datasetId) {
       }
     })
     .done(function(result){
-	// When loading is done
+		// When loading is done, add the route
         var geoJsonFeatures = result;
 		addRoute(datasetId,geoJsonFeatures);
 		return geoJsonFeatures;
@@ -222,7 +239,7 @@ function addLayerData(datasetId) {
       }
     })
     .done(function(result){
-	// When loading is done
+		// When loading is done, add the notifications
         var geoJsonFeatures = result;
 		addNotifications(datasetId,geoJsonFeatures);
 		return geoJsonFeatures;
@@ -231,81 +248,6 @@ function addLayerData(datasetId) {
 	
 	// End addLayerData
 }
-
-function uploadLayerData(){
-	Draw = getLayerData(datasetId);
-//    var drawnData = Draw.getAll();
-//    for(i = 0; i < drawnData.features.length; i++){
-
-//        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-//        xmlhttp.open("POST", 'https://evening-sierra-80988.herokuapp.com/dataset');
-//        xmlhttp.setRequestHeader("Content-Type", "application/json");
-//        xmlhttp.send(JSON.stringify({"feature":drawnData.features[i], "datasetId": "cirqs92m00hu8fgm8piqgihok"}));
-
-//        xmlhttp.onreadystatechange = function() {
-//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 && i == drawnData.features.length) {
-//            alert('upload successful!');
-
-//            getData(datasetId);
-//        } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200){
-//            alert('looks like something went wrong');
-//        }
-//    };
-//    }
-}
-
-// Calculate Route Distance...
-// This calculation starts as soon as the route has been loaded...
-
-//$.when(route).done(function() {
-//    var routeDistance = (JSON.stringify(turf.lineDistance(route.responseJSON.features[0]).toLocaleString()));
-
-// Add Menu
-/////////////////////////////////////////////////////////////////////
-var toggleableLayerIds = [];
-
-function addLayer(id)
-{ 
-//for (var i = 0; i < toggleableLayerIds.length; i++) {
-//	var id = toggleableLayerIds[i];
- 
-	var link = document.createElement('a');
-	link.href = '#';
-	link.className = 'active';
-	link.textContent = id;
- 
-	link.onclick = function(e) {
-		var clickedLayer = this.textContent;
-		e.preventDefault();
-		e.stopPropagation();
- 
-		var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
- 
-		if (visibility === 'visible') {
-			map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-			this.className = '';
-		} else {
-			this.className = 'active';
-			map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-		}
-};
- 
-var layers = document.getElementById('menu');
-layers.appendChild(link);
-};
-
-//});	
-
-// Add geolocate control to the map.
-///////////////////////////////////////////////////////////////////////
-map.addControl(
-	new mapboxgl.GeolocateControl({
-		positionOptions: {
-			enableHighAccuracy: true
-		},
-		trackUserLocation: true
-	})
-);
 
 // Draw the Map Matching route as a new layer on the map
 function addRoute(route, geoJsonData) {
@@ -338,9 +280,74 @@ function addRoute(route, geoJsonData) {
 			}
 		});
 		console.log("Route " + layerID + " successfully added.");
-		addLayer(layerID);
+		addLayerMenuItem(layerID);
 	};
 }
+
+// Add Menu
+/////////////////////////////////////////////////////////////////////
+var toggleableLayerIds = [];
+
+function addLayerMenuItem(id)
+{ 
+//for (var i = 0; i < toggleableLayerIds.length; i++) {
+//	var id = toggleableLayerIds[i];
+ 
+	var link = document.createElement('a');
+	link.href = '#';
+	link.className = 'active';
+	link.textContent = id;
+ 
+	link.onclick = function(e) {
+		var clickedLayer = this.textContent;
+		e.preventDefault();
+		e.stopPropagation();
+ 
+		var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+ 
+		if (visibility === 'visible') {
+			map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+			this.className = '';
+		} else {
+			this.className = 'active';
+			map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+			map.fitBounds(bounds);
+		}
+};
+ 
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+};
+
+function uploadLayerData(){
+	Draw = getLayerData(datasetId);
+//    var drawnData = Draw.getAll();
+//    for(i = 0; i < drawnData.features.length; i++){
+
+//        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+//        xmlhttp.open("POST", 'https://evening-sierra-80988.herokuapp.com/dataset');
+//        xmlhttp.setRequestHeader("Content-Type", "application/json");
+//        xmlhttp.send(JSON.stringify({"feature":drawnData.features[i], "datasetId": "cirqs92m00hu8fgm8piqgihok"}));
+
+//        xmlhttp.onreadystatechange = function() {
+//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 && i == drawnData.features.length) {
+//            alert('upload successful!');
+
+//            getData(datasetId);
+//        } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200){
+//            alert('looks like something went wrong');
+//        }
+//    };
+//    }
+}
+
+
+
+
+//});	
+
+
+
 
 // Draw the Map Matching notifications as a new layer on the map
 function addNotifications(notifications, geoJsonData) {
@@ -357,10 +364,19 @@ function addNotifications(notifications, geoJsonData) {
 		.setLngLat(marker.geometry.coordinates)
 		.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
 		.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+		.setRotationAlignment("map")
 		.addTo(map);
 		console.log("Marker " + marker.id + " successfully added.");
 	});
 }
+
+
+ 
+
+
+
+
+
 
 
 if (debug == true) {
