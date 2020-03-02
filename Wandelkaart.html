@@ -45,6 +45,10 @@
 		background-image: url('icons/ZW.png');
 	}
 	
+	#markerVerkeersBrigadier {
+		background-image: url('icons/VerkeersBrigadier.png');
+	}
+	
 	.mapboxgl-popup {
 		max-width: 200px;
 	}
@@ -106,9 +110,6 @@
 
 <nav id="menu"></nav>
 <div id="map"></div>
-<a href='#' id='export'></a>
-<a href="#" id='updateDataset'></a>
-
 
 <script>
 var debug = true;
@@ -122,7 +123,7 @@ var bounds = [
 ];
 
 var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
-var datasets = ["Klinkerbergerplas","Bloemenbuurt"];
+var datasets = ["Bloemenbuurt"];
 
 var map = new mapboxgl.Map({
 	container: 'map', // container id
@@ -327,6 +328,9 @@ function addNotifications(notifications, geoJsonData) {
 			break;
 			case 'ZW':
 				el.id = 'markerZW';
+			break;
+			default:
+				el.id = 'marker' + marker.properties['marker-symbol'];
 			break;
 		}
 		
