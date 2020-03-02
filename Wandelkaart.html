@@ -97,42 +97,7 @@
 		background: #3074a4;
 	}
 
-	/* Style for the extra buttons left... */
-	#export, #updateDataset {
-		position: absolute;
-		top:200px;
-		left:10px;
-		z-index:100;
-		background-color:white;
-		color:black;
-		padding:6px;
-		border-radius:4px;
-		font-family: 'Helvetica Neue';
-		cursor: pointer;
-		font-size:12px;
-		text-decoration:none;
-		background-image: url(icon.png);
-		background-repeat: no-repeat;
-		background-position: -4245px -3px;
-		height: 20px;
-		width: 20px;
-	}
-	#export:hover, #updateDataset:hover {
-		background-color: #ddd;
-	}
-	#updateDataset {
-		background-position: -4324px -3px;
-		top: 240px;
-	}
-
 </style>
-
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
-<link
-	rel="stylesheet"
-	href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
-	type="text/css"
-/>
 
 </head>
 
@@ -194,39 +159,15 @@ map.addControl(
 	})
 );
 
-
-// Add the draw buttons on the top left location...
-////////////////////////////////////////////////////
-var Draw = new MapboxDraw();
-map.addControl(Draw, 'top-left');
-
 map.on('load', function() {
 
 	var datasetId;
 	for (datasetId of datasets){
+		console.log("Adding: " + datasetId);
 		addLayerData(datasetId);
 	}
 	map.fitBounds(bounds);
-	
-    document.getElementById('export').onclick = function(e) {
-		// Extract GeoJson from featureGroup
-		var data = Draw.getAll();
 
-		if (data.features.length > 0) {
-			// Stringify the GeoJson
-			var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
-
-			// Create export
-				document.getElementById('export').setAttribute('href', 'data:' + convertedData);
-				document.getElementById('export').setAttribute('download','data.geojson');    
-		} else {
-			alert("Wouldn't you like to draw some data?");
-		}
-    }
-    document.getElementById('updateDataset').onclick = function(e) {
-		e.preventDefault();
-		uploadLayerData();
-    }
 });
 
 
@@ -236,7 +177,7 @@ function addLayerData(datasetId) {
       url : 'https://bartkaptein.github.io/' + datasetId + '.geojson',
       type : 'GET',
       dataType: 'json',
-	  success: console.log("Route data successfully loaded."),
+	  success: console.log("Route data " + datasetId + " successfully loaded."),
       error: function (xhr) {
 		alert(xhr.statusText)
       }
@@ -254,7 +195,7 @@ function addLayerData(datasetId) {
       url : 'https://bartkaptein.github.io/' + datasetId + '_Notifications.geojson',
       type : 'GET',
       dataType: 'json',
-	  success: console.log("Notifications data successfully loaded."),
+	  success: console.log("Notifications data " + datasetId + " successfully loaded."),
       error: function (xhr) {
 		alert(xhr.statusText)
       }
@@ -276,7 +217,7 @@ function addRoute(route, geoJsonData) {
 	// Calculate the route distance
     var routeDistance = (JSON.stringify(turf.lineDistance(geoJsonData.features[0]).toLocaleString()));
 	// Add the menuItem for this route...
-	var layerID = datasetId + " (" + routeDistance + " KM)";
+	var layerID = route + " (" + routeDistance + " KM)";
 
 	// If a layerID is already loaded, remove it
 	if (map.getSource(layerID)) {

@@ -39,7 +39,7 @@
 		},
 		{
 			"id": "3",
-			"type": "Rechtsaf",
+			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
@@ -51,24 +51,6 @@
 				"coordinates": [
 					4.47874,
 					52.18918
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "4",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "ZW",
-				"title": "Stoppen",
-				"description": "Stop hier even en kijk om je heen..."
-			},
-			"geometry": {
-				"coordinates": [
-					4.4810103905619489,
-					52.20211452370293
 				],
 				"type": "Point"
 			}
