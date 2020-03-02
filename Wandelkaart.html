@@ -176,7 +176,7 @@ map.addControl(new mapboxgl.NavigationControl());
 // based on zoom level...
 ///////////////////////////////////////////////
 map.on('zoom', function() {
-	if (map.getZoom() > 17) {
+	if (map.getZoom() > 16) {
 		$( ".marker" ).show();
 	} else {
 		$( ".marker" ).hide();
