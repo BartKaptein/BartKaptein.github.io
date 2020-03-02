@@ -145,10 +145,16 @@ map.addControl(new mapboxgl.NavigationControl());
 // based on zoom level...
 ///////////////////////////////////////////////
 map.on('zoom', function() {
-	if (map.getZoom() > 16) {
-		$( ".marker" ).show();
+	if (map.getZoom() > 9) {
+		$( ".zoom9" ).show();
 	} else {
-		$( ".marker" ).hide();
+		$( ".zoom9" ).hide();
+	}
+
+	if (map.getZoom() > 16) {
+		$( ".zoom16" ).show();
+	} else {
+		$( ".zoom16" ).hide();
 	}
 });
 
@@ -323,7 +329,14 @@ function addNotifications(notifications, geoJsonData) {
 
 		// create a HTML element for each feature
 		var el = document.createElement('div');
-		el.className = 'marker';
+		
+		switch (marker.properties['zoom-level']) {
+			case '9':
+				el.className = 'marker zoom9';
+			break;
+			default:
+				el.className = 'marker zoom16';
+			break;
 		
 		switch (marker.properties['marker-symbol']) {
 			case 'N':
