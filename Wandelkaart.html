@@ -157,7 +157,7 @@ var bounds = [
 ];
 
 var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
-var datasetId = "Klinkerbergerplas";
+var datasets = ["Klinkerbergerplas","Bloemenbuurt"];
 
 var map = new mapboxgl.Map({
 	container: 'map', // container id
@@ -202,8 +202,10 @@ map.addControl(Draw, 'top-left');
 
 map.on('load', function() {
 
-	addLayerData(datasetId);
-
+	var datasetId;
+	for (datasetId of datasets){
+		addLayerData(datasetId);
+	}
 	map.fitBounds(bounds);
 	
     document.getElementById('export').onclick = function(e) {
