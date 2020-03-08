@@ -145,9 +145,9 @@ map.addControl(new mapboxgl.NavigationControl());
 // based on zoom level...
 ///////////////////////////////////////////////
 map.on('zoom', function() {
-	if (debug == true) {
-		console.log("Zoomlevel: " + map.getZoom());
-	}
+//	if (debug == true) {
+//		console.log("Zoomlevel: " + map.getZoom());
+//	}
 	if (map.getZoom() > 14) {
 		$( ".zoom14" ).show();
 	} else {
@@ -286,7 +286,7 @@ function addLayerMenuItem(id)
 		} else {
 			this.className = 'active';
 			map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-			map.fitBounds(bounds);
+			map.fitBounds(clickedLayer.getBounds());
 		}
 };
  
@@ -333,14 +333,8 @@ function addNotifications(notifications, geoJsonData) {
 		// create a HTML element for each feature
 		var el = document.createElement('div');
 		
-		switch (marker.properties['zoom-level']) {
-			case '14':
-				el.className = 'marker zoom' + marker.properties['zoom-level'];
-			break;
-			default:
-				el.className = 'marker zoom16';
-			break;
-		}
+		el.className = 'marker zoom' + marker.properties['zoom-level'];
+		
 		switch (marker.properties['marker-symbol']) {
 			case 'N':
 				el.id = 'markerN';
@@ -352,7 +346,10 @@ function addNotifications(notifications, geoJsonData) {
 				el.id = 'marker' + marker.properties['marker-symbol'];
 			break;
 		}
-		
+		if (debug == true) {
+			console.log("Marker: " + marker.properties.title + " " + 
+			['marker-symbol'] + " zoomlevel: " + marker.properties['zoom-level']);
+		}
 		// make a marker for each feature and add to the map
 		new mapboxgl.Marker(el)
 		.setLngLat(marker.geometry.coordinates)
