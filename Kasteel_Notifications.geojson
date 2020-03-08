@@ -1,0 +1,62 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"id": "1",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "VerkeersBrigadier",
+				"zoom-level": 14,
+				"title": "VerkeersBrigadier",
+				"description": "De verkeersbrigadier helpt veilig de weg over te steken."
+			},
+			"geometry": {
+				"coordinates": [
+					4.47871,
+					52.1892
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "2",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "VerkeersBrigadier",
+				"zoom-level": 14,
+				"title": "VerkeersBrigadier",
+				"description": "De verkeersbrigadier helpt veilig de weg over te steken"
+			},
+			"geometry": {
+				"coordinates": [
+					4.47045,
+					52.18335
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "3",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "VerkeersBrigadier",
+				"zoom-level": 14,
+				"title": "VerkeersBrigadier",
+				"description": "De verkeersbrigadier helpt veilig de weg over te steken."
+			},
+			"geometry": {
+				"coordinates": [
+					4.48141,
+					52.181
+				],
+				"type": "Point"
+			}
+		}
+	]
+}
