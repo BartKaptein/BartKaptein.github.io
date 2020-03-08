@@ -6,7 +6,7 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
-<script src="https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js"></script>
+<script src="https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
 <style>
 
@@ -126,7 +126,8 @@ var bounds = [
 ];
 
 var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
-var datasets = ["Bloemenbuurt"];
+var route1 = {label: "Bloemenbuurt"};
+var Routes = new Array(route1);
 
 var map = new mapboxgl.Map({
 	container: 'map', // container id
@@ -140,6 +141,17 @@ var map = new mapboxgl.Map({
 // Add zoom and rotation controls to the map.
 //////////////////////////////////////////////
 map.addControl(new mapboxgl.NavigationControl());
+
+// Add geolocate control to the map.
+///////////////////////////////////////////////////////////////////////
+map.addControl(
+	new mapboxgl.GeolocateControl({
+		positionOptions: {
+			enableHighAccuracy: true
+		},
+		trackUserLocation: true
+	})
+);
 
 // Toggle the notification (direction) markers
 // based on zoom level...
@@ -161,63 +173,56 @@ map.on('zoom', function() {
 	}
 });
 
-// Add geolocate control to the map.
-///////////////////////////////////////////////////////////////////////
-map.addControl(
-	new mapboxgl.GeolocateControl({
-		positionOptions: {
-			enableHighAccuracy: true
-		},
-		trackUserLocation: true
-	})
-);
+// Add the routes (datasets) to the map...
+//////////////////////////////////////////
 
 map.on('load', function() {
 
-	var datasetId;
-	for (datasetId of datasets){
-		console.log("Adding: " + datasetId);
-		addLayerData(datasetId);
+	var route;
+	for (route of Routes){
+		console.log("Adding: " + route.label);
+		addLayerData(route)
+//		datasets[datasetId] = addLayerData(datasetId);
 	}
 	map.fitBounds(bounds);
 
 });
 
 
-function addLayerData(datasetId) {
+function addLayerData(route) {
 	// Loads a geoJsonfile route using ajax
     $.ajax({
-      url : 'https://bartkaptein.github.io/' + datasetId + '.geojson',
+      url : 'https://bartkaptein.github.io/' + route.label + '.geojson',
       type : 'GET',
       dataType: 'json',
-	  success: console.log("Route data " + datasetId + " successfully loaded."),
+	  success: console.log("Route data " + route.label + " successfully loaded."),
       error: function (xhr) {
 		alert(xhr.statusText)
       }
     })
     .done(function(result){
 		// When loading is done, add the route
-        var geoJsonFeatures = result;
-		addRoute(datasetId,geoJsonFeatures);
-		return geoJsonFeatures;
+        route.geoJsonData_Route = result;
+		addRoute(route);
+		return;
     });
 	// End Loads a geoJsonfile route using ajax
 	
 	// Loads a geoJsonfile notifications file using ajax
     $.ajax({
-      url : 'https://bartkaptein.github.io/' + datasetId + '_Notifications.geojson',
+      url : 'https://bartkaptein.github.io/' + route.label + '_Notifications.geojson',
       type : 'GET',
       dataType: 'json',
-	  success: console.log("Notifications data " + datasetId + " successfully loaded."),
+	  success: console.log("Notifications data " + route.label + " successfully loaded."),
       error: function (xhr) {
 		alert(xhr.statusText)
       }
     })
     .done(function(result){
 		// When loading is done, add the notifications
-        var geoJsonFeatures = result;
-		addNotifications(datasetId,geoJsonFeatures);
-		return geoJsonFeatures;
+        route.geoJsonData_Notifications = result;
+		addNotifications(route);
+		return;
     });
 	// End Loads a geoJsonfile route using ajax
 	
@@ -225,24 +230,26 @@ function addLayerData(datasetId) {
 }
 
 // Draw the Map Matching route as a new layer on the map
-function addRoute(route, geoJsonData) {
+function addRoute(route) {
 
 	// Calculate the route distance
-    var routeDistance = (JSON.stringify(turf.lineDistance(geoJsonData.features[0]).toLocaleString()));
+    var routeDistance = (JSON.stringify(turf.lineDistance(route.geoJsonData_Route.features[0]).toLocaleString()));
 	// Add the menuItem for this route...
-	var layerID = route + " (" + routeDistance + " KM)";
+	route.layerID = route.label + " (" + routeDistance + " KM)";
+	route.bbox = turf.bbox(route.geoJsonData_Route.features[0]);
+
 
 	// If a layerID is already loaded, remove it
-	if (map.getSource(layerID)) {
-		map.removeLayer(layerID)
-		map.removeSource(layerID)
+	if (map.getSource(route.layerID)) {
+		map.removeLayer(route.layerID)
+		map.removeSource(route.layerID)
 	} else {
 		map.addLayer({
-			"id": layerID,
+			"id": route.layerID,
 			"type": "line",
 			"source": {
 				"type": "geojson",
-				"data": geoJsonData
+				"data": route.geoJsonData_Route
 			},
 			"layout": {
 				"line-join": "round",
@@ -254,16 +261,15 @@ function addRoute(route, geoJsonData) {
 				"line-opacity": 0.8
 			}
 		});
-		console.log("Route " + layerID + " successfully added.");
-		addLayerMenuItem(layerID);
+		console.log("Route " + route.layerID + " successfully added.");
+		addLayerMenuItem(route);
 	};
 }
 
 // Add Menu
 /////////////////////////////////////////////////////////////////////
-var toggleableLayerIds = [];
 
-function addLayerMenuItem(id)
+function addLayerMenuItem(route)
 { 
 //for (var i = 0; i < toggleableLayerIds.length; i++) {
 //	var id = toggleableLayerIds[i];
@@ -271,7 +277,7 @@ function addLayerMenuItem(id)
 	var link = document.createElement('a');
 	link.href = '#';
 	link.className = 'active';
-	link.textContent = id;
+	link.textContent = route.layerID;
  
 	link.onclick = function(e) {
 		var clickedLayer = this.textContent;
@@ -286,49 +292,22 @@ function addLayerMenuItem(id)
 		} else {
 			this.className = 'active';
 			map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-			map.fitBounds(clickedLayer.getBounds());
+			map.fitBounds(route.bbox);
+			if (debug == true) {
+				console.log("fitBOunds: " + route.bbox);
+			}
 		}
+	};
+	var layers = document.getElementById('menu');
+	layers.appendChild(link);
 };
- 
-var layers = document.getElementById('menu');
-layers.appendChild(link);
-};
-
-function uploadLayerData(){
-	Draw = getLayerData(datasetId);
-//    var drawnData = Draw.getAll();
-//    for(i = 0; i < drawnData.features.length; i++){
-
-//        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-//        xmlhttp.open("POST", 'https://evening-sierra-80988.herokuapp.com/dataset');
-//        xmlhttp.setRequestHeader("Content-Type", "application/json");
-//        xmlhttp.send(JSON.stringify({"feature":drawnData.features[i], "datasetId": "cirqs92m00hu8fgm8piqgihok"}));
-
-//        xmlhttp.onreadystatechange = function() {
-//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 && i == drawnData.features.length) {
-//            alert('upload successful!');
-
-//            getData(datasetId);
-//        } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200){
-//            alert('looks like something went wrong');
-//        }
-//    };
-//    }
-}
-
-
-
-
-//});	
-
-
 
 
 // Draw the Map Matching notifications as a new layer on the map
-function addNotifications(notifications, geoJsonData) {
+function addNotifications(route) {
 
 	// add markers to map
-	geoJsonData.features.forEach(function(marker) {
+	route.geoJsonData_Notifications.features.forEach(function(marker) {
 
 		// create a HTML element for each feature
 		var el = document.createElement('div');
@@ -361,21 +340,10 @@ function addNotifications(notifications, geoJsonData) {
 	});
 }
 
-
- 
-
-
-
-
-
-
-
 if (debug == true) {
 	
 	// The DEBUG Container...
 	document.write("<pre id=\"debug\"></pre>");
-	
-
 	
 	// Add show mouse location to the map.
 	map.on('mousemove', function(e) {
