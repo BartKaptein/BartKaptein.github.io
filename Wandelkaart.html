@@ -63,19 +63,71 @@
 		font-family: 'Open Sans', sans-serif;
 	}
 
-	/* Style for the top right menu */
-	.navbar-menu {
-		background: #fff;
+/* Hamburger Menu */
+
+	.menu {
+		position: fixed;
+		top: 0;
+		right: 0;
+		background-color: #404040;
+		height: 50px;
+		width: 50px;
+		cursor: pointer;
+		transition: 0.3s;
+		z-index: 9999;
+	}
+	.menu span {
 		position: absolute;
-		z-index: 1;
+		height: 3px;
+		width: 25px;
+		background-color: #fff;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+		transition: 0.3s;
+	}
+	.menu span:before {
+		content: '';
+		position: absolute;
+		top: -8px;
+		background-color: #fff;
+		height: 3px;
+		width: 25px;
+		transition: 0.3s;
+	}
+	.menu span:after {
+		content: '';
+		position: absolute;
+		top: 8px;
+		background-color: #fff;
+		height: 3px;
+		width: 25px;
+		transition: 0.3s;
+	}
+	.menu.active span { background-color: transparent; }
+	.menu.active span:before { transform: rotate(45deg);top: 0; }
+	.menu.active span:after { transform: rotate(-45deg);top: 0; }
+
+	/* End */
+
+	/* Navigationbar */
+
+	.navbar-menu {
+		background-color: #fff;
+		position: absolute;
 		top: 10px;
 		right: 50px;
-		border-radius: 3px;
+		z-index: 1;
 		width: 200px;
+		border-radius: 3px;
 		border: 1px solid rgba(0, 0, 0, 0.4);
 		font-family: 'Open Sans', sans-serif;
+		transform: translateY(-200%);
+		transition: 0.5s;
 	}
- 
+	.navbar-menu.active { transform: translateX(0);transition: 0.5s; }
+	.navbar-menu .menu-listing { padding: 0;margin: 0;text-align: right; }
+	.menu-listing li { display: inline-block; }
 	.navbar-menu a {
 		font-size: 13px;
 		color: #404040;
@@ -85,9 +137,10 @@
 		padding: 10px;
 		text-decoration: none;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-		text-align: center;
+		text-align: center;	
+		transition: 0.5s;
 	}
- 
+	
 	.navbar-menu a:last-child {
 		border: none;
 	}
@@ -105,6 +158,13 @@
 	.navbar-menu a.active:hover {
 		background: #3074a4;
 	}
+	
+	.menu-listing li a:hover { background-color: #262626;color: #fff;transition: 0.5s; }
+
+	/* End */
+
+
+
 
 </style>
 
@@ -112,6 +172,8 @@
 
 
 <body>
+
+
 <div class = "menu">
 	<span></span>
 </div>
@@ -121,7 +183,7 @@
 <div id="map"></div>
 
 <script>
-var debug = true;
+var debug = false;
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFydGthcHRlaW4iLCJhIjoiY2s1bXIycWZ0MGhkNjNycWk1Mm95ZWFmciJ9.g7LB4JvkixAv5vbJWpJhrw';
 
@@ -137,6 +199,15 @@ var route2 = {label: "Kasteel"};
 var route3 = {label: "Klinkerbergerplas"};
 var activeRoute = "Bloemenbuurt";
 var Routes = new Array(route1,route2,route3);
+
+/* Hamburger Menu */
+
+$(".menu").click(function() {
+	$(".menu").toggleClass("active");
+	$(".navbar-menu").toggleClass("active");
+});
+
+/* End */
 
 $( function() {
     $( "#menu" ).menu();
