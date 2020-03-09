@@ -4,10 +4,12 @@
 <meta charset="utf-8" />
 <title>Wandelkaart</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
 <script src="https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <style>
 
 	body { margin: 0; padding: 0; }
@@ -62,7 +64,7 @@
 	}
 
 	/* Style for the top right menu */
-	#menu {
+	.navbar-menu {
 		background: #fff;
 		position: absolute;
 		z-index: 1;
@@ -74,7 +76,7 @@
 		font-family: 'Open Sans', sans-serif;
 	}
  
-	#menu a {
+	.navbar-menu a {
 		font-size: 13px;
 		color: #404040;
 		display: block;
@@ -86,21 +88,21 @@
 		text-align: center;
 	}
  
-	#menu a:last-child {
+	.navbar-menu a:last-child {
 		border: none;
 	}
 	 
-	#menu a:hover {
+	.navbar-menu a:hover {
 		background-color: #f8f8f8;
 		color: #404040;
 	}
 	 
-	#menu a.active {
+	.navbar-menu a.active {
 		background-color: #3887be;
 		color: #ffffff;
 	}
 	 
-	#menu a.active:hover {
+	.navbar-menu a.active:hover {
 		background: #3074a4;
 	}
 
@@ -110,8 +112,12 @@
 
 
 <body>
+<div class = "menu">
+	<span></span>
+</div>
 
-<nav id="menu"></nav>
+<nav class="navbar-menu"><ul id="menu"></ul></nav>
+
 <div id="map"></div>
 
 <script>
@@ -129,8 +135,12 @@ var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
 var route1 = {label: "Bloemenbuurt"};
 var route2 = {label: "Kasteel"};
 var route3 = {label: "Klinkerbergerplas"};
-
+var activeRoute = "Bloemenbuurt";
 var Routes = new Array(route1,route2,route3);
+
+$( function() {
+    $( "#menu" ).menu();
+  } );
 
 var map = new mapboxgl.Map({
 	container: 'map', // container id
@@ -162,15 +172,16 @@ map.addControl(
 map.on('zoom', function() {
 //	if (debug == true) {
 //		console.log("Zoomlevel: " + map.getZoom());
+//		console.log("Active Route: " + activeRoute);
 //	}
 	if (map.getZoom() > 14) {
-		$( ".zoom14" ).show();
+		$( ".zoom14."+activeRoute ).show();
 	} else {
 		$( ".zoom14" ).hide();
 	}
 
 	if (map.getZoom() > 16) {
-		$( ".zoom16" ).show();
+		$( ".zoom16."+activeRoute ).show();
 	} else {
 		$( ".zoom16" ).hide();
 	}
@@ -238,7 +249,8 @@ function addRoute(route) {
 	// Calculate the route distance
     var routeDistance = (JSON.stringify(turf.lineDistance(route.geoJsonData_Route.features[0]).toLocaleString()));
 	// Add the menuItem for this route...
-	route.layerID = route.label + " (" + routeDistance + " KM)";
+	route.menuItem = route.label + " (" + routeDistance + " KM)";
+	route.layerID = route.label
 	route.bbox = turf.bbox(route.geoJsonData_Route.features[0]);
 
 
@@ -277,32 +289,52 @@ function addLayerMenuItem(route)
 //for (var i = 0; i < toggleableLayerIds.length; i++) {
 //	var id = toggleableLayerIds[i];
  
-	var link = document.createElement('a');
-	link.href = '#';
-	link.className = 'active';
-	link.textContent = route.layerID;
+	route.link = document.createElement('a');
+	route.link.href = '#';
+	route.link.className = 'active';
+	route.link.textContent = route.menuItem;
  
-	link.onclick = function(e) {
-		var clickedLayer = this.textContent;
+	route.link.onclick = function(e) {
+		var menuItem = this.textContent;
 		e.preventDefault();
 		e.stopPropagation();
- 
-		var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
- 
-		if (visibility === 'visible') {
-			map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-			this.className = '';
-		} else {
-			this.className = 'active';
-			map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-			map.fitBounds(route.bbox);
-			if (debug == true) {
-				console.log("fitBOunds: " + route.bbox);
+
+
+		for (route of Routes){
+			if (route.menuItem === menuItem) {
+				// Make the selected route active
+				activeRoute = route.layerID
+				// Set the menu-item of the selected route active
+				route.link.className = 'active';
+				// Show the selected route notification items...
+				$( "."+route.layerID ).show();
+				// Show the route
+				map.setLayoutProperty(route.layerID, 'visibility', 'visible');
+				// Zoom to the route
+				map.fitBounds(route.bbox);
+			}
+			else {
+				// Set the menu-item to not-active
+				route.link.className = '';
+				// Hide the non-selected route notification items...
+				$( "."+route.layerID ).hide();
+				// Hide the non-selected route
+				map.setLayoutProperty(route.layerID, 'visibility', 'none');
 			}
 		}
 	};
-	var layers = document.getElementById('menu');
-	layers.appendChild(link);
+	// Add the menu item...
+	var ulElement = document.getElementById('menu');
+	console.log(ulElement);
+	var li = document.createElement('li');
+	console.log(li);
+	var liElement = ulElement.appendChild(li);
+	var div = document.createElement('div');
+	var divElement = liElement.appendChild(div)
+	divElement.appendChild(route.link);
+
+//	var layers = document.getElementById('menu');
+//	layers.appendChild(route.link);
 };
 
 
@@ -315,7 +347,7 @@ function addNotifications(route) {
 		// create a HTML element for each feature
 		var el = document.createElement('div');
 		
-		el.className = 'marker zoom' + marker.properties['zoom-level'];
+		el.className = route.layerID + ' marker zoom' + marker.properties['zoom-level']
 		
 		switch (marker.properties['marker-symbol']) {
 			case 'N':
@@ -330,7 +362,7 @@ function addNotifications(route) {
 		}
 		if (debug == true) {
 			console.log("Marker: " + marker.properties.title + " " + 
-			['marker-symbol'] + " zoomlevel: " + marker.properties['zoom-level']);
+			"Class: " + el.className + " ID: " + el.id);
 		}
 		// make a marker for each feature and add to the map
 		new mapboxgl.Marker(el)
