@@ -59,9 +59,6 @@
 		background-image: url('icons/ZW.png');
 	}
 	
-	#markerVerkeersBrigadier {
-		background-image: url('icons/VerkeersRegelaar.png');
-	}
 	#markerVerkeersRegelaar {
 		background-image: url('icons/VerkeersRegelaar.png');
 	}
@@ -221,10 +218,12 @@ $(".menu").click(function() {
 	$(".menu").toggleClass("active");
 	$(".navbar-menu").toggleClass("active");
 });
+
 // Navigation Bar Menu (from jquery-ui)
 $( function() {
     $( "#menu" ).menu();
   } );
+
 // Map
 var map = new mapboxgl.Map({
 	container: 'map', // container id
@@ -281,12 +280,85 @@ map.on('load', function() {
 		addLayerData(route)
 //		datasets[datasetId] = addLayerData(datasetId);
 	}
-	map.fitBounds(bounds);
+
+
+	//map.fitBounds(bounds);
 
 });
+// Callback function from the menu...
+//////////////////////////////////////
+function setActiveRoute(route) {
+	console.log("Activate Route: " + route.label);
+	// Make the selected route active
+	activeRoute = route.layerID
+	// Set the menu-item of the selected route active
+	route.link.className = 'active';
+	// Show the selected route notification items...
+	$( "."+route.layerID ).show();
+	// Show the route
+	map.setLayoutProperty(route.layerID, 'visibility', 'visible');
+	// Zoom to the route
+	map.fitBounds(route.bbox);
+};
 
+// Callback function from the menu...
+//////////////////////////////////////
+function setInactiveRoute(route) {
+	// Set the menu-item to not-active
+	route.link.className = '';
+	// Hide the non-selected route notification items...
+	$( "."+route.layerID ).hide();
+	// Hide the non-selected route
+	map.setLayoutProperty(route.layerID, 'visibility', 'none');
+};
 
 function addLayerData(route) {
+	$.when(
+		// Loads a geoJsonfile route using ajax
+		$.ajax({
+			url : 'https://bartkaptein.github.io/' + route.label + '.geojson',
+			type : 'GET',
+			dataType: 'json',
+			success: console.log("Route data " + route.label + " successfully loaded."),
+			error: function (xhr) {
+				alert(xhr.statusText)
+			}
+		})
+		.done(function(result){
+			// When loading is done, add the route
+			route.geoJsonData_Route = result;
+			addRoute(route);
+			return;
+		}),
+		// End Loads a geoJsonfile route using ajax
+	
+		// Loads a geoJsonfile notifications file using ajax
+		$.ajax({
+			url : 'https://bartkaptein.github.io/' + route.label + '_Notifications.geojson',
+			type : 'GET',
+			dataType: 'json',
+			success: console.log("Notifications data " + route.label + " successfully loaded."),
+			error: function (xhr) {
+				alert(xhr.statusText)
+			}
+		})
+		.done(function(result){
+			// When loading is done, add the notifications
+			route.geoJsonData_Notifications = result;
+			addNotifications(route);
+			return;
+		}),
+	).then(function() {
+		if (route.label === activeRoute) {
+			setActiveRoute(route);
+		}
+		else {
+			setInactiveRoute(route);
+		}
+	});
+}
+
+function addLayerDataOLD(route) {
 	// Loads a geoJsonfile route using ajax
     $.ajax({
       url : 'https://bartkaptein.github.io/' + route.label + '.geojson',
@@ -301,6 +373,13 @@ function addLayerData(route) {
 		// When loading is done, add the route
         route.geoJsonData_Route = result;
 		addRoute(route);
+		if (route.label === activeRoute) {
+			console.log(route);
+			setActiveRoute(route);
+		}
+		else {
+			setInactiveRoute(route);
+		}
 		return;
     });
 	// End Loads a geoJsonfile route using ajax
@@ -369,42 +448,30 @@ function addRoute(route) {
 
 function addLayerMenuItem(route)
 { 
-//for (var i = 0; i < toggleableLayerIds.length; i++) {
-//	var id = toggleableLayerIds[i];
- 
 	route.link = document.createElement('a');
 	route.link.href = '#';
 	route.link.className = 'active';
+	route.link.id = route.label;
 	route.link.textContent = route.menuItem;
  
 	route.link.onclick = function(e) {
 		var menuItem = this.textContent;
-		e.preventDefault();
-		e.stopPropagation();
-
+		if (typeof value !== "undefined") {
+			e.preventDefault();
+			e.stopPropagation();
+		}
 
 		for (route of Routes){
 			if (route.menuItem === menuItem) {
-				// Make the selected route active
-				activeRoute = route.layerID
-				// Set the menu-item of the selected route active
-				route.link.className = 'active';
-				// Show the selected route notification items...
-				$( "."+route.layerID ).show();
-				// Show the route
-				map.setLayoutProperty(route.layerID, 'visibility', 'visible');
-				// Zoom to the route
-				map.fitBounds(route.bbox);
+				setActiveRoute(route);
 			}
 			else {
-				// Set the menu-item to not-active
-				route.link.className = '';
-				// Hide the non-selected route notification items...
-				$( "."+route.layerID ).hide();
-				// Hide the non-selected route
-				map.setLayoutProperty(route.layerID, 'visibility', 'none');
+				setInactiveRoute(route);
 			}
 		}
+		// Close the menu...
+		$(".menu").toggleClass("active");
+		$(".navbar-menu").toggleClass("active");
 	};
 	// Add the menu item...
 	var ulElement = document.getElementById('menu');
