@@ -409,12 +409,11 @@ function addLayerDataOLD(route) {
 function addRoute(route) {
 
 	// Calculate the route distance
-    var routeDistance = (JSON.stringify(turf.lineDistance(route.geoJsonData_Route.features[0]).toLocaleString()));
+	var routeDistance = turf.lineDistance(route.geoJsonData_Route.features[0]).toFixed(1).toLocaleString();
 	// Add the menuItem for this route...
 	route.menuItem = route.label + " (" + routeDistance + " KM)";
 	route.layerID = route.label
 	route.bbox = turf.bbox(route.geoJsonData_Route.features[0]);
-
 
 	// If a layerID is already loaded, remove it
 	if (map.getSource(route.layerID)) {
