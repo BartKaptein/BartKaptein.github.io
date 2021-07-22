@@ -11,5 +11,5 @@ JQuery user interface: https://jqueryui.com
 
 TURF (Advanced geospatial analysis for browsers and node.js): https://turfjs.org/
 
-# Edit GEOJson material
-https://europa.eu/webtools/mgmt/wizard/components/geod/
+## Edit GEOJson files
+http://geojson.io/
