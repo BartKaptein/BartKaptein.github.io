@@ -1,0 +1,77 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"id": "1",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "ZW",
+				"title": "Linksaf",
+				"description": "Linksaf het voetpad op."
+			},
+			"geometry": {
+				"coordinates": [
+					4.482313798822503,
+					52.19679954028908
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "2",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "N",
+				"title": "Rechtdoor",
+				"description": "Rechtdoor de weg volgen."
+			},
+			"geometry": {
+				"coordinates": [
+					4.4819679966308,
+					52.196913672377409
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "3",
+			"type": "Rechtsaf",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "N",
+				"title": "Oversteken",
+				"description": "Steek de straat over."
+			},
+			"geometry": {
+				"coordinates": [
+					4.482207398147722,
+					52.20012555525457
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "ZW",
+				"title": "Stoppen",
+				"description": "Stop hier even en kijk om je heen..."
+			},
+			"geometry": {
+				"coordinates": [
+					4.4810103905619489,
+					52.20211452370293
+				],
+				"type": "Point"
+			}
+		}
+	]
+}
