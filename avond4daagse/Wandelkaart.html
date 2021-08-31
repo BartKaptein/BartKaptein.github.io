@@ -324,7 +324,7 @@ function setActiveRoute(route) {
 // Callback function from the menu...
 //////////////////////////////////////
 function setInactiveRoute(route) {
-	if (!!route) {
+	if (typeof route !== 'undefined') {
 		// Set the menu-item to not-active
 		route.link.className = '';
 		// Hide the non-selected route notification items...
