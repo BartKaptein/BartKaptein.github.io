@@ -206,7 +206,7 @@ var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split
 const urlParams = new URLSearchParams(window.location.search)
 var Routes = new Array();
 	
-if urlParams.has('route') {
+if (urlParams.has('route')) {
 	_routes = urlParams.getAll('route')
 	for (_route of _routes){
 		var route = {label: _route};
