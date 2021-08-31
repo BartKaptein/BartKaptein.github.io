@@ -204,7 +204,9 @@ var route2 = {label: "Kasteel"};
 var route3 = {label: "Klinkenbergerplas"};
 var activeRoute = "RondomHaaswijk";
 var Routes = new Array(route1,route2,route3);
-
+var getUrl = window.location;
+var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+	
 // To initialize the map, we need some bounds and a center...
 var bounds = [
 [4.471,52.190], // Southwest coordinates
@@ -275,6 +277,7 @@ map.on('zoom', function() {
 map.on('load', function() {
 
 	var route;
+
 	for (route of Routes){
 		console.log("Adding: " + route.label);
 		addLayerData(route)
@@ -316,7 +319,7 @@ function addLayerData(route) {
 	$.when(
 		// Loads a geoJsonfile route using ajax
 		$.ajax({
-			url : route.label + '.geojson',
+			url : baseUrl + '/' + route.label + '.geojson',
 			type : 'GET',
 			dataType: 'json',
 			success: console.log("Route data " + route.label + " successfully loaded."),
