@@ -199,14 +199,32 @@ var debug = false;
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFydGthcHRlaW4iLCJhIjoiY2s1bXIycWZ0MGhkNjNycWk1Mm95ZWFmciJ9.g7LB4JvkixAv5vbJWpJhrw';
 
-var route1 = {label: "RondomHaaswijk"};
-var route2 = {label: "Kasteel"};
-var route3 = {label: "Klinkenbergerplas"};
-var activeRoute = "RondomHaaswijk";
-var Routes = new Array(route1,route2,route3);
-var getUrl = window.location;
-var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+const getUrl = window.location
+const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+const urlParams = new URLSearchParams(getUrl.search)
+
+var Routes = new Array();
+var activeRoute = ""
 	
+if (urlParams.has('route')) {
+	_routes = urlParams.getAll('route')
+	for (_route of _routes){
+		var route = {label: _route};
+		Routes.push(route);
+		activeRoute = _route;
+	}
+}
+else {
+	var route1 = {label: "dag1"};
+	Routes.push(route1);
+	var route2 = {label: "dag2"};
+	Routes.push(route2);	
+	var route3 = {label: "dag3"};
+	Routes.push(route3);
+	var route4 = {label: "dag4"};
+	Routes.push(route4);
+	activeRoute = "dag1";
+}
 // To initialize the map, we need some bounds and a center...
 var bounds = [
 [4.471,52.190], // Southwest coordinates
@@ -281,7 +299,6 @@ map.on('load', function() {
 	for (route of Routes){
 		console.log("Adding: " + route.label);
 		addLayerData(route)
-//		datasets[datasetId] = addLayerData(datasetId);
 	}
 
 
@@ -324,7 +341,7 @@ function addLayerData(route) {
 			dataType: 'json',
 			success: console.log("Route data " + route.label + " successfully loaded."),
 			error: function (xhr) {
-				alert(xhr.statusText)
+				alert(xhr.statusText + ": " + route.label + " could not be loaded.")
 			}
 		})
 		.done(function(result){
@@ -337,12 +354,13 @@ function addLayerData(route) {
 	
 		// Loads a geoJsonfile notifications file using ajax
 		$.ajax({
-			url : 'https://bartkaptein.github.io/' + route.label + '_Notifications.geojson',
+			url : baseUrl + '/' + route.label + '_Notifications.geojson',
 			type : 'GET',
 			dataType: 'json',
 			success: console.log("Notifications data " + route.label + " successfully loaded."),
 			error: function (xhr) {
-				alert(xhr.statusText)
+				console.log(xhr.statusText + ": Could not load notifications data " + route.label + "." )
+				// alert(xhr.statusText)
 			}
 		})
 		.done(function(result){
@@ -361,52 +379,7 @@ function addLayerData(route) {
 	});
 }
 
-function addLayerDataOLD(route) {
-	// Loads a geoJsonfile route using ajax
-    $.ajax({
-      url : 'https://bartkaptein.github.io/' + route.label + '.geojson',
-      type : 'GET',
-      dataType: 'json',
-	  success: console.log("Route data " + route.label + " successfully loaded."),
-      error: function (xhr) {
-		alert(xhr.statusText)
-      }
-    })
-    .done(function(result){
-		// When loading is done, add the route
-        route.geoJsonData_Route = result;
-		addRoute(route);
-		if (route.label === activeRoute) {
-			console.log(route);
-			setActiveRoute(route);
-		}
-		else {
-			setInactiveRoute(route);
-		}
-		return;
-    });
-	// End Loads a geoJsonfile route using ajax
-	
-	// Loads a geoJsonfile notifications file using ajax
-    $.ajax({
-      url : 'https://bartkaptein.github.io/' + route.label + '_Notifications.geojson',
-      type : 'GET',
-      dataType: 'json',
-	  success: console.log("Notifications data " + route.label + " successfully loaded."),
-      error: function (xhr) {
-		alert(xhr.statusText)
-      }
-    })
-    .done(function(result){
-		// When loading is done, add the notifications
-        route.geoJsonData_Notifications = result;
-		addNotifications(route);
-		return;
-    });
-	// End Loads a geoJsonfile route using ajax
-	
-	// End addLayerData
-}
+
 
 // Draw the Map Matching route as a new layer on the map
 function addRoute(route) {
