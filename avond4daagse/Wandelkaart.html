@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Wandelkaart</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<style>
+
+	body { margin: 0; padding: 0; }
+
+	#debug {
+		display: block;
+		position: relative;
+		margin: 0px auto;
+		width: 50%;
+		padding: 10px;
+		border: none;
+		border-radius: 3px;
+		font-size: 12px;
+		text-align: center;
+		color: #222;
+		background: #fff;
+	}
+
+	#map { 
+		position: absolute; 
+		top: 0; 
+		bottom: 0; 
+		width: 100%; 
+	}
+	
+	.mapboxgl-ctrl-top-right {
+		position: absolute;
+		top: 35px;
+		right: 2px;
+		width: 25px;
+	}
+		
+	.marker {
+		background-image: url('icons/mapbox-icon.png');
+		background-size: cover;
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		cursor: pointer; 
+	}
+	
+	#markerN {
+		background-image: url('icons/N.png');
+	}
+	
+	#markerZW {
+		background-image: url('icons/ZW.png');
+	}
+	
+	#markerVerkeersRegelaar {
+		background-image: url('icons/VerkeersRegelaar.png');
+	}
+	
+	.mapboxgl-popup {
+		max-width: 200px;
+	}
+
+	.mapboxgl-popup-content {
+		text-align: center;
+		font-family: 'Open Sans', sans-serif;
+	}
+
+/* Hamburger Menu */
+
+	.menu {
+		position: fixed;
+		top: 5px;
+		right: 10px;
+		background-color: #404040;
+		border-radius: 3px;
+		height: 30px;
+		width: 30px;
+		cursor: pointer;
+		transition: 0.3s;
+		z-index: 9999;
+	}
+	.menu span {
+		position: absolute;
+		height: 3px;
+		width: 25px;
+		background-color: #fff;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+		transition: 0.3s;
+	}
+	.menu span:before {
+		content: '';
+		position: absolute;
+		top: -8px;
+		background-color: #fff;
+		height: 3px;
+		width: 25px;
+		transition: 0.3s;
+	}
+	.menu span:after {
+		content: '';
+		position: absolute;
+		top: 8px;
+		background-color: #fff;
+		height: 3px;
+		width: 25px;
+		transition: 0.3s;
+	}
+	.menu.active span { background-color: transparent; }
+	.menu.active span:before { transform: rotate(45deg);top: 0; }
+	.menu.active span:after { transform: rotate(-45deg);top: 0; }
+
+	/* End */
+
+	/* Navigationbar */
+
+	.navbar-menu {
+		background-color: #fff;
+		position: absolute;
+		top: 10px;
+		right: 50px;
+		z-index: 1;
+		width: 200px;
+		border-radius: 3px;
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		font-family: 'Open Sans', sans-serif;
+		transform: translateY(-150%);
+		transition: 0.5s;
+	}
+	.navbar-menu.active { transform: translateX(0);transition: 0.5s; }
+	.navbar-menu .menu-listing { padding: 0;margin: 0;text-align: right; }
+	.menu-listing li { display: inline-block; }
+	.navbar-menu a {
+		font-size: 13px;
+		color: #404040;
+		display: block;
+		margin: 0;
+		padding: 0;
+		padding: 10px;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+		text-align: center;	
+		transition: 0.5s;
+	}
+	
+	.navbar-menu a:last-child {
+		border: none;
+	}
+	 
+	.navbar-menu a:hover {
+		background-color: #f8f8f8;
+		color: #404040;
+	}
+	 
+	.navbar-menu a.active {
+		background-color: #3887be;
+		color: #ffffff;
+	}
+	 
+	.navbar-menu a.active:hover {
+		background: #3074a4;
+	}
+	
+	.menu-listing li a:hover { background-color: #262626;color: #fff;transition: 0.5s; }
+
+	/* End */
+
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+<!-- Hamburger Menu -->
+<div class = "menu">
+	<span></span>
+</div>
+
+<!-- Navigation-bar Menu -->
+<nav class="navbar-menu"><ul id="menu"></ul></nav>
+
+<!-- Map -->
+<div id="map"></div>
+
+<script>
+var debug = false;
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiYmFydGthcHRlaW4iLCJhIjoiY2s1bXIycWZ0MGhkNjNycWk1Mm95ZWFmciJ9.g7LB4JvkixAv5vbJWpJhrw';
+
+var route1 = {label: "RondomHaaswijk"};
+var route2 = {label: "Kasteel"};
+var route3 = {label: "Klinkenbergerplas"};
+var activeRoute = "RondomHaaswijk";
+var Routes = new Array(route1,route2,route3);
+
+// To initialize the map, we need some bounds and a center...
+var bounds = [
+[4.471,52.190], // Southwest coordinates
+[4.494,52.205] // Northeast coordinates
+];
+
+var center = [(bounds[0][0] + bounds[1][0])/2, (bounds[0][1] + bounds[1][1])/2];
+
+// Hamburger Menu
+$(".menu").click(function() {
+	$(".menu").toggleClass("active");
+	$(".navbar-menu").toggleClass("active");
+});
+
+// Navigation Bar Menu (from jquery-ui)
+$( function() {
+    $( "#menu" ).menu();
+  } );
+
+// Map
+var map = new mapboxgl.Map({
+	container: 'map', // container id
+	style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+	//style: 'mapbox://styles/bartkaptein/ck5wzyfg61bnc1in2ij01rcdy',
+	center: center, // starting position [lng, lat]
+	zoom: 9 // starting zoom
+});
+
+// Add zoom and rotation controls to the map.
+//////////////////////////////////////////////
+map.addControl(new mapboxgl.NavigationControl());
+
+// Add geolocate control to the map.
+///////////////////////////////////////////////////////////////////////
+map.addControl(
+	new mapboxgl.GeolocateControl({
+		positionOptions: {
+			enableHighAccuracy: true
+		},
+		trackUserLocation: true
+	})
+);
+
+// Toggle the notification (direction) markers
+// based on zoom level...
+///////////////////////////////////////////////
+map.on('zoom', function() {
+//	if (debug == true) {
+//		console.log("Zoomlevel: " + map.getZoom());
+//		console.log("Active Route: " + activeRoute);
+//	}
+	if (map.getZoom() > 14) {
+		$( ".zoom14."+activeRoute ).show();
+	} else {
+		$( ".zoom14" ).hide();
+	}
+
+	if (map.getZoom() > 16) {
+		$( ".zoom16."+activeRoute ).show();
+	} else {
+		$( ".zoom16" ).hide();
+	}
+});
+
+// Add the routes (datasets) to the map...
+//////////////////////////////////////////
+
+map.on('load', function() {
+
+	var route;
+	for (route of Routes){
+		console.log("Adding: " + route.label);
+		addLayerData(route)
+//		datasets[datasetId] = addLayerData(datasetId);
+	}
+
+
+	//map.fitBounds(bounds);
+
+});
+// Callback function from the menu...
+//////////////////////////////////////
+function setActiveRoute(route) {
+	console.log("Activate Route: " + route.label);
+	// Make the selected route active
+	activeRoute = route.layerID
+	// Set the menu-item of the selected route active
+	route.link.className = 'active';
+	// Show the selected route notification items...
+	$( "."+route.layerID ).show();
+	// Show the route
+	map.setLayoutProperty(route.layerID, 'visibility', 'visible');
+	// Zoom to the route
+	map.fitBounds(route.bbox);
+};
+
+// Callback function from the menu...
+//////////////////////////////////////
+function setInactiveRoute(route) {
+	// Set the menu-item to not-active
+	route.link.className = '';
+	// Hide the non-selected route notification items...
+	$( "."+route.layerID ).hide();
+	// Hide the non-selected route
+	map.setLayoutProperty(route.layerID, 'visibility', 'none');
+};
+
+function addLayerData(route) {
+	$.when(
+		// Loads a geoJsonfile route using ajax
+		$.ajax({
+			url : route.label + '.geojson',
+			type : 'GET',
+			dataType: 'json',
+			success: console.log("Route data " + route.label + " successfully loaded."),
+			error: function (xhr) {
+				alert(xhr.statusText)
+			}
+		})
+		.done(function(result){
+			// When loading is done, add the route
+			route.geoJsonData_Route = result;
+			addRoute(route);
+			return;
+		}),
+		// End Loads a geoJsonfile route using ajax
+	
+		// Loads a geoJsonfile notifications file using ajax
+		$.ajax({
+			url : 'https://bartkaptein.github.io/' + route.label + '_Notifications.geojson',
+			type : 'GET',
+			dataType: 'json',
+			success: console.log("Notifications data " + route.label + " successfully loaded."),
+			error: function (xhr) {
+				alert(xhr.statusText)
+			}
+		})
+		.done(function(result){
+			// When loading is done, add the notifications
+			route.geoJsonData_Notifications = result;
+			addNotifications(route);
+			return;
+		}),
+	).then(function() {
+		if (route.label === activeRoute) {
+			setActiveRoute(route);
+		}
+		else {
+			setInactiveRoute(route);
+		}
+	});
+}
+
+function addLayerDataOLD(route) {
+	// Loads a geoJsonfile route using ajax
+    $.ajax({
+      url : 'https://bartkaptein.github.io/' + route.label + '.geojson',
+      type : 'GET',
+      dataType: 'json',
+	  success: console.log("Route data " + route.label + " successfully loaded."),
+      error: function (xhr) {
+		alert(xhr.statusText)
+      }
+    })
+    .done(function(result){
+		// When loading is done, add the route
+        route.geoJsonData_Route = result;
+		addRoute(route);
+		if (route.label === activeRoute) {
+			console.log(route);
+			setActiveRoute(route);
+		}
+		else {
+			setInactiveRoute(route);
+		}
+		return;
+    });
+	// End Loads a geoJsonfile route using ajax
+	
+	// Loads a geoJsonfile notifications file using ajax
+    $.ajax({
+      url : 'https://bartkaptein.github.io/' + route.label + '_Notifications.geojson',
+      type : 'GET',
+      dataType: 'json',
+	  success: console.log("Notifications data " + route.label + " successfully loaded."),
+      error: function (xhr) {
+		alert(xhr.statusText)
+      }
+    })
+    .done(function(result){
+		// When loading is done, add the notifications
+        route.geoJsonData_Notifications = result;
+		addNotifications(route);
+		return;
+    });
+	// End Loads a geoJsonfile route using ajax
+	
+	// End addLayerData
+}
+
+// Draw the Map Matching route as a new layer on the map
+function addRoute(route) {
+
+	// Calculate the route distance
+	var routeDistance = turf.lineDistance(route.geoJsonData_Route.features[0]).toFixed(1).toLocaleString();
+	// Add the menuItem for this route...
+	route.menuItem = route.label + " (" + routeDistance + " KM)";
+	route.layerID = route.label
+	route.bbox = turf.bbox(route.geoJsonData_Route.features[0]);
+
+	// If a layerID is already loaded, remove it
+	if (map.getSource(route.layerID)) {
+		map.removeLayer(route.layerID)
+		map.removeSource(route.layerID)
+	} else {
+		map.addLayer({
+			"id": route.layerID,
+			"type": "line",
+			"source": {
+				"type": "geojson",
+				"data": route.geoJsonData_Route
+			},
+			"layout": {
+				"line-join": "round",
+				"line-cap": "round"
+			},
+			"paint": {
+				"line-color": "#03AA46",
+				"line-width": 8,
+				"line-opacity": 0.8
+			}
+		});
+		console.log("Route " + route.layerID + " successfully added.");
+		addLayerMenuItem(route);
+	};
+}
+
+// Add Menu
+/////////////////////////////////////////////////////////////////////
+
+function addLayerMenuItem(route)
+{ 
+	route.link = document.createElement('a');
+	route.link.href = '#';
+	route.link.className = 'active';
+	route.link.id = route.label;
+	route.link.textContent = route.menuItem;
+ 
+	route.link.onclick = function(e) {
+		var menuItem = this.textContent;
+		if (typeof value !== "undefined") {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+
+		for (route of Routes){
+			if (route.menuItem === menuItem) {
+				setActiveRoute(route);
+			}
+			else {
+				setInactiveRoute(route);
+			}
+		}
+		// Close the menu...
+		$(".menu").toggleClass("active");
+		$(".navbar-menu").toggleClass("active");
+	};
+	// Add the menu item...
+	var ulElement = document.getElementById('menu');
+	console.log(ulElement);
+	var li = document.createElement('li');
+	console.log(li);
+	var liElement = ulElement.appendChild(li);
+	var div = document.createElement('div');
+	var divElement = liElement.appendChild(div)
+	divElement.appendChild(route.link);
+
+//	var layers = document.getElementById('menu');
+//	layers.appendChild(route.link);
+};
+
+
+// Draw the Map Matching notifications as a new layer on the map
+function addNotifications(route) {
+
+	// add markers to map
+	route.geoJsonData_Notifications.features.forEach(function(marker) {
+
+		// create a HTML element for each feature
+		var el = document.createElement('div');
+		
+		el.className = route.layerID + ' marker zoom' + marker.properties['zoom-level']
+		
+		switch (marker.properties['marker-symbol']) {
+			case 'N':
+				el.id = 'markerN';
+			break;
+			case 'ZW':
+				el.id = 'markerZW';
+			break;
+			default:
+				el.id = 'marker' + marker.properties['marker-symbol'];
+			break;
+		}
+		if (debug == true) {
+			console.log("Marker: " + marker.properties.title + " " + 
+			"Class: " + el.className + " ID: " + el.id);
+		}
+		// make a marker for each feature and add to the map
+		new mapboxgl.Marker(el)
+		.setLngLat(marker.geometry.coordinates)
+		.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+		.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+		.setRotationAlignment("map")
+		.addTo(map);
+		console.log("Marker " + marker.id + " " + marker.properties['marker-symbol'] + " successfully added.");
+	});
+}
+
+if (debug == true) {
+	
+	// The DEBUG Container...
+	document.write("<pre id=\"debug\"></pre>");
+	
+	// Add show mouse location to the map.
+	map.on('mousemove', function(e) {
+
+		document.getElementById('debug').innerHTML =
+		// e.point is the x, y coordinates of the mousemove event relative
+		// to the top-left corner of the map
+		JSON.stringify(e.point) +
+		'<br />' +
+		// e.lngLat is the longitude, latitude geographical position of the event
+		JSON.stringify(e.lngLat.wrap()) +
+		'<br />' 
+	});
+}
+
+</script>
+ 
+</body>
+</html>
