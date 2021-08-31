@@ -324,12 +324,14 @@ function setActiveRoute(route) {
 // Callback function from the menu...
 //////////////////////////////////////
 function setInactiveRoute(route) {
-	// Set the menu-item to not-active
-	route.link.className = '';
-	// Hide the non-selected route notification items...
-	$( "."+route.layerID ).hide();
-	// Hide the non-selected route
-	map.setLayoutProperty(route.layerID, 'visibility', 'none');
+	if (!!route) {
+		// Set the menu-item to not-active
+		route.link.className = '';
+		// Hide the non-selected route notification items...
+		$( "."+route.layerID ).hide();
+		// Hide the non-selected route
+		map.setLayoutProperty(route.layerID, 'visibility', 'none');
+	}
 };
 
 function addLayerData(route) {
