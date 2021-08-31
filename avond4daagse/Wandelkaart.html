@@ -298,7 +298,6 @@ map.on('load', function() {
 	for (route of Routes){
 		console.log("Adding: " + route.label);
 		addLayerData(route)
-//		datasets[datasetId] = addLayerData(datasetId);
 	}
 
 
@@ -341,7 +340,7 @@ function addLayerData(route) {
 			dataType: 'json',
 			success: console.log("Route data " + route.label + " successfully loaded."),
 			error: function (xhr) {
-				alert(xhr.statusText)
+				alert(xhr.statusText + ": " + route.label + " could not be loaded.")
 			}
 		})
 		.done(function(result){
