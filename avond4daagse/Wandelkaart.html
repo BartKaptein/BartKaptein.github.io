@@ -356,7 +356,7 @@ function addLayerData(route) {
 			dataType: 'json',
 			success: console.log("Notifications data " + route.label + " successfully loaded."),
 			error: function (xhr) {
-				console.log(xhr.statusText + ": Could not load notifications data " + route.label ),
+				console.log(xhr.statusText + ": Could not load notifications data " + route.label + "." )
 				// alert(xhr.statusText)
 			}
 		})
