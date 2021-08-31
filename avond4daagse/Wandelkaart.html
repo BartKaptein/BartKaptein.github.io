@@ -204,12 +204,14 @@ const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.spl
 const urlParams = new URLSearchParams(getUrl.search)
 
 var Routes = new Array();
+var activeRoute = ""
 	
 if (urlParams.has('route')) {
 	_routes = urlParams.getAll('route')
 	for (_route of _routes){
 		var route = {label: _route};
 		Routes.push(route);
+		activeRoute = _route;
 	}
 }
 else {
@@ -221,7 +223,7 @@ else {
 	Routes.push(route3);
 	var route4 = {label: "dag4"};
 	Routes.push(route4);
-	var activeRoute = "dag1";
+	activeRoute = "dag1";
 }
 // To initialize the map, we need some bounds and a center...
 var bounds = [
