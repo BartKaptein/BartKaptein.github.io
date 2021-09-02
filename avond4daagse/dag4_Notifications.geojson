@@ -1,0 +1,62 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"id": "1",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+			},
+			"geometry": {
+				"coordinates": [
+					4.46629,
+					52.18703
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "2",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "De Verkeersregelaar helpt veilig de weg over te steken"
+			},
+			"geometry": {
+				"coordinates": [
+					4.47148,
+					52.18746
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "3",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+			},
+			"geometry": {
+				"coordinates": [
+					4.47874,
+					52.18918
+				],
+				"type": "Point"
+			}
+		}
+	]
+}
