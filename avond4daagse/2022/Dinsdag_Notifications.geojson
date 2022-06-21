@@ -45,9 +45,9 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Jubo",
+				"marker-symbol": "Jumbo",
 				"zoom-level": 14,
-				"title": "Jubo",
+				"title": "Jumbo",
 				"description": "Hier kan je een tractatie ophalen"
 			},
 			"geometry": {
