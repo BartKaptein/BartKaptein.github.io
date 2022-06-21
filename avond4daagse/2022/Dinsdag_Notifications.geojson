@@ -171,6 +171,44 @@
 				],
 				"type": "Point"
 			}
+		},
+		{
+			"id": "9",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Start",
+				"zoom-level": 14,
+				"title": "Start",
+				"description": "Vandaag de Kasteelroute"
+			},
+			"geometry": {
+				"coordinates": [
+		          	4.474734663963318,
+          			52.19163725722771
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "9",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Finish",
+				"zoom-level": 14,
+				"title": "Finish",
+				"description": "De kop is eraf"
+			},
+			"geometry": {
+				"coordinates": [
+		          		4.4745951890945435,
+          				52.19135937740901
+				],
+				"type": "Point"
+			}
 		}
 	]
 }
