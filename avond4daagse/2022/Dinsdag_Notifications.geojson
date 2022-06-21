@@ -26,7 +26,7 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Fromagerie",
+				"marker-symbol": "Sponsor",
 				"zoom-level": 14,
 				"title": "Fromagerie du Patron",
 				"description": "Hier kan je een tractatie ophalen"
@@ -45,7 +45,7 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Jumbo",
+				"marker-symbol": "Sponsor",
 				"zoom-level": 14,
 				"title": "Jumbo",
 				"description": "Hier kan je een tractatie ophalen"
