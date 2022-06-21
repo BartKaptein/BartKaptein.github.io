@@ -10,12 +10,12 @@
 				"marker-symbol": "Verkeersregelaar",
 				"zoom-level": 14,
 				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+				"description": "Verkeersregelaar Haaswijklaan."
 			},
 			"geometry": {
 				"coordinates": [
-					4.46629,
-					52.18703
+					 4.474230408668517,
+                                         52.196552072225806
 				],
 				"type": "Point"
 			}
@@ -29,12 +29,12 @@
 				"marker-symbol": "Verkeersregelaar",
 				"zoom-level": 14,
 				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken"
+				"description": "Verkeersregelaar Haarlemmerstraatweg 1"
 			},
 			"geometry": {
 				"coordinates": [
-					4.47148,
-					52.18746
+					     4.469638466835022,
+                                             52.1952544691756
 				],
 				"type": "Point"
 			}
@@ -48,12 +48,88 @@
 				"marker-symbol": "Verkeersregelaar",
 				"zoom-level": 14,
 				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+				"description": "Verkeersregelaar Haarlemmerstraatweg 2"
 			},
 			"geometry": {
 				"coordinates": [
-					4.47874,
-					52.18918
+					4.467771649360657,
+          				52.192916468546606
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Haaswijklaan"
+			},
+			"geometry": {
+				"coordinates": [
+          				4.4751691818237305,
+          				52.19278328759382
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Kleyn Profijtlaan"
+			},
+			"geometry": {
+				"coordinates": [
+          				4.475163817405701,
+          				52.192492261160325
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "5",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Start",
+				"zoom-level": 14,
+				"title": "Start",
+				"description": "Vandaag een Rondje Haaswijk"
+			},
+			"geometry": {
+				"coordinates": [
+          	          	4.474512040615082,
+          			52.19124756728778
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "6",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Finish",
+				"zoom-level": 14,
+				"title": "Finish",
+				"description": "Vergeet niet je medaile op te halen"
+			},
+			"geometry": {
+				"coordinates": [
+          		          	4.475238919258118,
+          				52.19155175593002
 				],
 				"type": "Point"
 			}
