@@ -10,12 +10,12 @@
 				"marker-symbol": "Verkeersregelaar",
 				"zoom-level": 14,
 				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+				"description": "Verkeersregelaar Floralaan"
 			},
 			"geometry": {
 				"coordinates": [
-					4.46629,
-					52.18703
+			          	4.471285343170166,
+          				52.18749683250248
 				],
 				"type": "Point"
 			}
@@ -26,15 +26,15 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
+				"marker-symbol": "Fromagerie",
 				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken"
+				"title": "Fromagerie du Patron",
+				"description": "Hier kan je een tractatie ophalen"
 			},
 			"geometry": {
 				"coordinates": [
-					4.47148,
-					52.18746
+			          4.471207559108734,
+          			  52.186835775863685
 				],
 				"type": "Point"
 			}
@@ -45,15 +45,129 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
+				"marker-symbol": "Jubo",
 				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+				"title": "Jubo",
+				"description": "Hier kan je een tractatie ophalen"
 			},
 			"geometry": {
 				"coordinates": [
-					4.47874,
-					52.18918
+			          	4.470390826463699,
+          				52.18582608332162
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Ommevoort"
+			},
+			"geometry": {
+				"coordinates": [
+			            	4.470408260822295,
+          				52.18532780640316
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "5",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Lijtweg"
+			},
+			"geometry": {
+				"coordinates": [
+			            	4.470408260822295,
+          				52.18532780640316
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "6",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Hofdijck"
+			},
+			"geometry": {
+				"coordinates": [
+		          		4.470539689064026,
+          				52.182985994551444
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "7",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Laan van Oud Poelgeest"
+			},
+			"geometry": {
+				"coordinates": [
+         			 4.481515288352966,
+       				   52.181050288711965
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "8",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Lange Voort"
+			},
+			"geometry": {
+				"coordinates": [
+		          	4.477379322052002,
+          			52.185812927567135
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "9",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar President Kennedylaan"
+			},
+			"geometry": {
+				"coordinates": [
+		          	4.478774070739746,
+          			52.18918396235744
 				],
 				"type": "Point"
 			}
