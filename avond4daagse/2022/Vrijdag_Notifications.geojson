@@ -95,6 +95,44 @@
 				],
 				"type": "Point"
 			}
+		},
+		{
+			"id": "5",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Start",
+				"zoom-level": 14,
+				"title": "Start",
+				"description": "Vandaag een Rondje Haaswijk"
+			},
+			"geometry": {
+				"coordinates": [
+          				4.475163817405701,
+          				52.192492261160325
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "6",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Finish",
+				"zoom-level": 14,
+				"title": "Finish",
+				"description": "Vergeet niet je medaile op te halen"
+			},
+			"geometry": {
+				"coordinates": [
+          				4.475163817405701,
+          				52.192492261160325
+				],
+				"type": "Point"
+			}
 		}
 	]
 }
