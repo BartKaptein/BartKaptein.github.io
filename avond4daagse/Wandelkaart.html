@@ -237,6 +237,11 @@ else {
   // Todo: Set activeRoute to day of the week...
 	activeRoute = "Dinsdag";
 }
+var showMarkers = new Array();
+if (urlParams.has('Verkeersregelaar')) {
+	showMarkers.push('Verkeersregelaar');
+}
+	
 // To initialize the map, we need some bounds and a center...
 var bounds = [
 [4.471,52.190], // Southwest coordinates
@@ -482,35 +487,41 @@ function addNotifications(route) {
 
 	// add markers to map
 	route.geoJsonData_Notifications.features.forEach(function(marker) {
-
-		// create a HTML element for each feature
-		var el = document.createElement('div');
+		if showMarkers.has(marker.properties['marker-symbol']) {
+			// create a HTML element for each feature
+			var el = document.createElement('div');
 		
-		el.className = route.layerID + ' marker zoom' + marker.properties['zoom-level']
+			el.className = route.layerID + ' marker zoom' + marker.properties['zoom-level']
 		
-		switch (marker.properties['marker-symbol']) {
-			case 'N':
-				el.id = 'markerN';
-			break;
-			case 'ZW':
-				el.id = 'markerZW';
-			break;
-			default:
-				el.id = 'marker' + marker.properties['marker-symbol'];
-			break;
+			switch (marker.properties['marker-symbol']) {
+				case 'N':
+					el.id = 'markerN';
+				break;
+				case 'ZW':
+					el.id = 'markerZW';
+				break;
+				default:
+					el.id = 'marker' + marker.properties['marker-symbol'];
+				break;
+			}
+			if (debug == true) {
+				console.log("Marker: " + marker.properties.title + " " + 
+				"Class: " + el.className + " ID: " + el.id);
+			}
+			// make a marker for each feature and add to the map
+			new mapboxgl.Marker(el)
+				.setLngLat(marker.geometry.coordinates)
+				.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+				.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+				.setRotationAlignment("map")
+				.addTo(map);
+			console.log("Marker " + marker.id + " " + marker.properties['marker-symbol'] + " successfully added.");
 		}
-		if (debug == true) {
-			console.log("Marker: " + marker.properties.title + " " + 
-			"Class: " + el.className + " ID: " + el.id);
+		else {
+			if (debug == true) {
+				console.log("Marker: " + marker.properties.title + " " + 
+				"Class: " + el.className + " ID: " + el.id + " NOT ADDED);
 		}
-		// make a marker for each feature and add to the map
-		new mapboxgl.Marker(el)
-		.setLngLat(marker.geometry.coordinates)
-		.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-		.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
-		.setRotationAlignment("map")
-		.addTo(map);
-		console.log("Marker " + marker.id + " " + marker.properties['marker-symbol'] + " successfully added.");
 	});
 }
 
