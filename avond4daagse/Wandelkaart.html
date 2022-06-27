@@ -215,13 +215,13 @@ const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.spl
 const urlParams = new URLSearchParams(getUrl.search)
 
 
-# Some switches to show (or not show) e.g. Verkeersregelaar
+// Some switches to show (or not show) e.g. Verkeersregelaar
 var showMarkers = new Array();
 if (urlParams.has('Verkeersregelaar')) {
 	showMarkers.push('Verkeersregelaar');
 }
 
-# Switch to show specific route
+// Switch to show specific route
 var Routes = new Array();
 var activeRoute = ""	
 if (urlParams.has('route')) {
