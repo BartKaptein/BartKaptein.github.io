@@ -490,7 +490,7 @@ function addNotifications(route) {
 
 	// add markers to map
 	route.geoJsonData_Notifications.features.forEach(function(marker) {
-		if showMarkers.has(marker.properties['marker-symbol']) {
+		if (showMarkers.has(marker.properties['marker-symbol'])) {
 			// create a HTML element for each feature
 			var el = document.createElement('div');
 		
