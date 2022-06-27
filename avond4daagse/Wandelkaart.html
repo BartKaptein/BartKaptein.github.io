@@ -217,6 +217,9 @@ const urlParams = new URLSearchParams(getUrl.search)
 
 // Some switches to show (or not show) e.g. Verkeersregelaar
 var showMarkers = new Array();
+	showMarkers.push('Start');
+	showMarkers.push('Finish');
+	showMarkers.push('Sponsor');
 if (urlParams.has('Verkeersregelaar')) {
 	showMarkers.push('Verkeersregelaar');
 }
