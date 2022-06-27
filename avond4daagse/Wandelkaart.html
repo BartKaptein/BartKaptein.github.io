@@ -215,10 +215,15 @@ const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.spl
 const urlParams = new URLSearchParams(getUrl.search)
 
 
+# Some switches to show (or not show) e.g. Verkeersregelaar
+var showMarkers = new Array();
+if (urlParams.has('Verkeersregelaar')) {
+	showMarkers.push('Verkeersregelaar');
+}
+
+# Switch to show specific route
 var Routes = new Array();
-var activeRoute = ""
-global var showMarkers = new Array();
-	
+var activeRoute = ""	
 if (urlParams.has('route')) {
 	_routes = urlParams.getAll('route')
 	for (_route of _routes){
@@ -240,10 +245,6 @@ else {
 	activeRoute = "Dinsdag";
 }
 
-if (urlParams.has('Verkeersregelaar')) {
-	showMarkers.push('Verkeersregelaar');
-}
-	
 // To initialize the map, we need some bounds and a center...
 var bounds = [
 [4.471,52.190], // Southwest coordinates
