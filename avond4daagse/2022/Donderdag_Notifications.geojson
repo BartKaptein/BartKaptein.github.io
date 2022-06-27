@@ -7,34 +7,34 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
+				"marker-symbol": "Start",
 				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+				"title": "Start",
+				"description": "Vandaag een Rondje Haaswijk"
 			},
 			"geometry": {
 				"coordinates": [
-					4.46629,
-					52.18703
+       	          	          4.474646151065826,
+			          52.19135608888004
 				],
 				"type": "Point"
 			}
 		},
-		{
+			{
 			"id": "2",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
+				"marker-symbol": "Finish",
 				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken"
+				"title": "Finish",
+				"description": "Vergeet niet je medaile op te halen"
 			},
 			"geometry": {
 				"coordinates": [
-					4.47148,
-					52.18746
+          		           4.475222826004028,
+     				     52.1915599772158
 				],
 				"type": "Point"
 			}
@@ -48,12 +48,50 @@
 				"marker-symbol": "Verkeersregelaar",
 				"zoom-level": 14,
 				"title": "Verkeersregelaar",
-				"description": "De Verkeersregelaar helpt veilig de weg over te steken."
+				"description": "Verkeersregelaar Kleyn Profijtlaan 1"
 			},
 			"geometry": {
 				"coordinates": [
-					4.47874,
-					52.18918
+			              4.477888941764831,
+          				52.19185265399869
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Morsebellaan"
+			},
+			"geometry": {
+				"coordinates": [
+			             4.48266327381134,
+     				     52.19301676505014
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "5",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Kleyn Profijtlaan 2"
+			},
+			"geometry": {
+				"coordinates": [
+			                    4.480909109115601,
+        				  52.19118672930955
 				],
 				"type": "Point"
 			}
