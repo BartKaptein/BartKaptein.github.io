@@ -214,8 +214,10 @@ const getUrl = window.location
 const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1] + "/" + 2022;
 const urlParams = new URLSearchParams(getUrl.search)
 
+
 var Routes = new Array();
 var activeRoute = ""
+global var showMarkers = new Array();
 	
 if (urlParams.has('route')) {
 	_routes = urlParams.getAll('route')
@@ -237,7 +239,7 @@ else {
   // Todo: Set activeRoute to day of the week...
 	activeRoute = "Dinsdag";
 }
-var showMarkers = new Array();
+
 if (urlParams.has('Verkeersregelaar')) {
 	showMarkers.push('Verkeersregelaar');
 }
