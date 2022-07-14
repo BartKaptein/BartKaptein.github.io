@@ -59,44 +59,6 @@
 			}
 		},
 		{
-			"id": "4",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Haaswijklaan"
-			},
-			"geometry": {
-				"coordinates": [
-          				4.4751691818237305,
-          				52.19278328759382
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "4",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Kleyn Profijtlaan"
-			},
-			"geometry": {
-				"coordinates": [
-          				4.475163817405701,
-          				52.192492261160325
-				],
-				"type": "Point"
-			}
-		},
-		{
 			"id": "5",
 			"type": "Feature",
 			"properties": {
