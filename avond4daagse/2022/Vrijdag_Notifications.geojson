@@ -59,7 +59,45 @@
 			}
 		},
 		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Kerckwervelaan 1"
+			},
+			"geometry": {
+				"coordinates": [
+				          4.4738709926605225,
+				          52.193123638124526
+				],
+				"type": "Point"
+			}
+		},
+				{
 			"id": "5",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Verkeersregelaar",
+				"zoom-level": 14,
+				"title": "Verkeersregelaar",
+				"description": "Verkeersregelaar Kerckwervelaan 2"
+			},
+			"geometry": {
+				"coordinates": [
+					4.467771649360657,
+          				52.192916468546606
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "6",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
@@ -71,14 +109,14 @@
 			},
 			"geometry": {
 				"coordinates": [
-          				4.4747453927993766,
-          				52.19164712275148
+  			        4.4745951890945435,
+   			       52.19141034957684
 				],
 				"type": "Point"
 			}
 		},
 		{
-			"id": "6",
+			"id": "7",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
