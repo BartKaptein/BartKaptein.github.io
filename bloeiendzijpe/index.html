@@ -1,0 +1,86 @@
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<title>Bloeiend Zijpe test</title>
+		<meta name="keywords" content="Bloeiend Zijpe Schagen">
+		<meta name="description" content="Startpagina Routes Bloeiend Zijpe Schagen">
+		<script language="javascript"><!--
+			if (top.frames.length!=0)
+			top.location=self.document.location;
+			// -->
+		</script>
+
+        <style>
+ 	         * {
+  				box-sizing: border-box;
+			}
+			.flex-container {
+  				display: flex;
+				flex-wrap: wrap;
+		        align: left;
+  				background-color: #ffffff;
+			}
+
+			.flex-container-left {
+          		flex-direction: column;
+  				background-color: #f1f1f1;
+          		padding: 10px;
+  				font-size: 1em;
+          		flex: 60%
+			}
+
+          .flex-container-right {
+          		flex-direction: column;
+  				background-color: #f1f1f1;
+          		padding: 10px;
+  				font-size: 1em;
+          		flex: 30%
+			}
+            
+          .flex-container-right > div {
+          		margin: 10px;
+          }
+          /* Responsive layout - makes a one column layout instead of a two-column layout */
+			@media (max-width: 800px) {
+  				.flex-container-left, .flex-container-right {
+    			flex: 100%;
+  				}
+			}
+          
+
+		</style>
+		
+	</head>
+
+	<body bgcolor="#ffffff" link="black" vlink="black" alink="grey" text="black">
+      <div class="flex-container">
+        <div class="flex-container-left">
+			<div>
+				<A HREF="https://www.bvhm.nl" TARGET="_blank"><img src="logos/logobvhm.png" height="400" alt="Logo BUURTVERENIGING" /></a>
+			</div>
+        	<div>
+				<h1>Bloeiend Zijpe</h1>
+                <h2>April / Mei ???</h2>
+				<p>Welkom op de internetpagina met de routes van Bloeiend Zijpe.</p>
+				<p>Deze pagina is nog in ontwikkeling</p>
+        	</div>
+        	<div>
+				<ul>
+					<li><A HREF="Wandelkaart.html?route=test">Test</A></li>
+				</ul>
+          </div>
+        </div><!--flex-conrtainer-left-->
+        <div class="flex-container-right">
+          <div>
+            <H2>Onze sponsoren:</H2>
+          </div>
+          <div>
+            <A HREF="https://www.facebook.com/Snackbar-t-Haasje-540913206027444/" TARGET="_blank"><img src="logos/tHaasje.jpg" width="200" alt="Snackbar 't Haasje" /></a>            
+          </div>
+        </div> <!--flex-container-right-->
+      </div>
+	</body>
+
+</html>
+
