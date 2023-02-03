@@ -211,7 +211,7 @@ var debug = false;
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFydGthcHRlaW4iLCJhIjoiY2s1bXIycWZ0MGhkNjNycWk1Mm95ZWFmciJ9.g7LB4JvkixAv5vbJWpJhrw';
 
 const getUrl = window.location
-const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1] + "/" + 2022;
+const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1] + "/" + 2023;
 const urlParams = new URLSearchParams(getUrl.search)
 
 
@@ -241,16 +241,16 @@ if (urlParams.has('route')) {
 	}
 }
 else {
-	var route1 = {label: "Dinsdag"};
+	var route1 = {label: "Test"};
 	Routes.push(route1);
-	var route2 = {label: "Woensdag"};
-	Routes.push(route2);	
-	var route3 = {label: "Donderdag"};
-	Routes.push(route3);
-	var route4 = {label: "Vrijdag"};
-	Routes.push(route4);
+//	var route2 = {label: "Woensdag"};
+//	Routes.push(route2);	
+//	var route3 = {label: "Donderdag"};
+//	Routes.push(route3);
+//	var route4 = {label: "Vrijdag"};
+//	Routes.push(route4);
   // Todo: Set activeRoute to day of the week...
-	activeRoute = "Dinsdag";
+	activeRoute = "Test";
 }
 
 // To initialize the map, we need some bounds and a center...
