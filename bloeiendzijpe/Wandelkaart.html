@@ -372,6 +372,7 @@ function addLayerData(route) {
 			success: console.log("Route data " + route.label + " successfully loaded."),
 			error: function (xhr) {
 				alert(xhr.statusText + ": " + route.label + " could not be loaded.")
+				console.log("Cannot load " + baseUrl + '/' + route.label + '.geojson' + ".") 
 			}
 		})
 		.done(function(result){
