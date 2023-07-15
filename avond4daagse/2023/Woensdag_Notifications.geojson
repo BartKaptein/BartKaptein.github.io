@@ -7,10 +7,10 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "small",
-				"marker-symbol": "Start",
+				"marker-symbol": "Finish",
 				"zoom-level": 14,
-				"title": "start",
-				"description": "Start"
+				"title": "Finish",
+				"description": "Finish"
 			},
 			"geometry": {
 				"coordinates": [
@@ -26,10 +26,10 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "small",
-				"marker-symbol": "Finish",
+				"marker-symbol": "Start",
 				"zoom-level": 14,
-				"title": "finish",
-				"description": "Finish"
+				"title": "Start",
+				"description": "Start"
 			},
 			"geometry": {
 				"coordinates": [
