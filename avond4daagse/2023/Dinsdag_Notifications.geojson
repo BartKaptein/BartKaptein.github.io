@@ -2,25 +2,6 @@
 	"type": "FeatureCollection",
 	"features": [
 		{
-			"id": "1",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Floralaan"
-			},
-			"geometry": {
-				"coordinates": [
-			          	4.471285343170166,
-          				52.18749683250248
-				],
-				"type": "Point"
-			}
-		},
-		{
 			"id": "2",
 			"type": "Feature",
 			"properties": {
@@ -59,129 +40,15 @@
 			}
 		},
 		{
-			"id": "4",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Ommevoort"
-			},
-			"geometry": {
-				"coordinates": [
-			            	4.470408260822295,
-          				52.18532780640316
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "5",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Lijtweg"
-			},
-			"geometry": {
-				"coordinates": [
-			            	4.470408260822295,
-          				52.18532780640316
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "6",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Hofdijck"
-			},
-			"geometry": {
-				"coordinates": [
-		          		4.470539689064026,
-          				52.182985994551444
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "7",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Laan van Oud Poelgeest"
-			},
-			"geometry": {
-				"coordinates": [
-         			 4.481515288352966,
-       				   52.181050288711965
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "8",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Lange Voort"
-			},
-			"geometry": {
-				"coordinates": [
-		          	4.477379322052002,
-          			52.185812927567135
-				],
-				"type": "Point"
-			}
-		},
-		{
 			"id": "9",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
+				"marker-symbol": "Finish",
 				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar President Kennedylaan"
-			},
-			"geometry": {
-				"coordinates": [
-		          	4.478774070739746,
-          			52.18918396235744
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "9",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Start",
-				"zoom-level": 14,
-				"title": "Start",
-				"description": "Vandaag de Kasteelroute"
+				"title": "Finish",
+				"description": ""
 			},
 			"geometry": {
 				"coordinates": [
@@ -197,10 +64,10 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Finish",
+				"marker-symbol": "Start",
 				"zoom-level": 14,
-				"title": "Finish",
-				"description": "De kop is eraf"
+				"title": "Start",
+				"description": ""
 			},
 			"geometry": {
 				"coordinates": [
