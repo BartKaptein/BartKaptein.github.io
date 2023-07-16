@@ -10,7 +10,7 @@
 				"marker-symbol": "Start",
 				"zoom-level": 14,
 				"title": "Start",
-				"description": "Vandaag een Rondje Haaswijk"
+				"description": ""
 			},
 			"geometry": {
 				"coordinates": [
@@ -29,7 +29,7 @@
 				"marker-symbol": "Finish",
 				"zoom-level": 14,
 				"title": "Finish",
-				"description": "Vergeet niet je medaile op te halen"
+				"description": ""
 			},
 			"geometry": {
 				"coordinates": [
