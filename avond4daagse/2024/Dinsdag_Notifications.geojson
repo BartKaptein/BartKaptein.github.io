@@ -21,33 +21,14 @@
 			}
 		},
 		{
-			"id": "3",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Sponsor",
-				"zoom-level": 14,
-				"title": "Jumbo",
-				"description": "Hier kan je een tractatie ophalen"
-			},
-			"geometry": {
-				"coordinates": [
-			          	4.470390826463699,
-          				52.18582608332162
-				],
-				"type": "Point"
-			}
-		},
-		{
 			"id": "9",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Finish",
+				"marker-symbol": "Start",
 				"zoom-level": 14,
-				"title": "Finish",
+				"title": "Start",
 				"description": ""
 			},
 			"geometry": {
@@ -64,9 +45,9 @@
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "medium",
-				"marker-symbol": "Start",
+				"marker-symbol": "Finish",
 				"zoom-level": 14,
-				"title": "Start",
+				"title": "Finish",
 				"description": ""
 			},
 			"geometry": {
