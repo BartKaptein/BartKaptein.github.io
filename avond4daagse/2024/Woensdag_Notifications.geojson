@@ -2,15 +2,15 @@
 	"type": "FeatureCollection",
 	"features": [
 		{
-			"id": "start",
+			"id": "finish",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "small",
-				"marker-symbol": "Start",
+				"marker-symbol": "Finish",
 				"zoom-level": 14,
-				"title": "Start",
-				"description": "Start"
+				"title": "Finish",
+				"description": "Finish"
 			},
 			"geometry": {
 				"coordinates": [
@@ -21,15 +21,15 @@
 			}
 		},
 		{
-			"id": "finish",
+			"id": "start",
 			"type": "Feature",
 			"properties": {
 				"marker-color": "#7e7e7e",
 				"marker-size": "small",
-				"marker-symbol": "Finish",
+				"marker-symbol": "Start",
 				"zoom-level": 14,
-				"title": "Finish",
-				"description": "Finish"
+				"title": "Start",
+				"description": "Start"
 			},
 			"geometry": {
 				"coordinates": [
