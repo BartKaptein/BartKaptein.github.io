@@ -1,0 +1,43 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"id": "6",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Start",
+				"zoom-level": 14,
+				"title": "Start",
+				"description": ""
+			},
+			"geometry": {
+				"coordinates": [
+  			        4.4745951890945435,
+   			       52.19141034957684
+				],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "7",
+			"type": "Feature",
+			"properties": {
+				"marker-color": "#7e7e7e",
+				"marker-size": "medium",
+				"marker-symbol": "Finish",
+				"zoom-level": 14,
+				"title": "Finish",
+				"description": ""
+			},
+			"geometry": {
+				"coordinates": [
+          				4.4747453927993766,
+          				52.19164712275148
+				],
+				"type": "Point"
+			}
+		}
+	]
+}
