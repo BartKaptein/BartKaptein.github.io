@@ -10,7 +10,7 @@
 				"marker-symbol": "Start",
 				"zoom-level": 14,
 				"title": "Start",
-				"description": "Vandaag een Rondje Haaswijk"
+				"description": "Vandaag Rondje Hofbrouckerpark"
 			},
 			"geometry": {
 				"coordinates": [
@@ -35,63 +35,6 @@
 				"coordinates": [
           		           4.475222826004028,
      				     52.1915599772158
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "3",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Kleyn Profijtlaan 1"
-			},
-			"geometry": {
-				"coordinates": [
-			              4.477888941764831,
-          				52.19185265399869
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "4",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Morsebellaan"
-			},
-			"geometry": {
-				"coordinates": [
-			             4.48266327381134,
-     				     52.19301676505014
-				],
-				"type": "Point"
-			}
-		},
-		{
-			"id": "5",
-			"type": "Feature",
-			"properties": {
-				"marker-color": "#7e7e7e",
-				"marker-size": "medium",
-				"marker-symbol": "Verkeersregelaar",
-				"zoom-level": 14,
-				"title": "Verkeersregelaar",
-				"description": "Verkeersregelaar Kleyn Profijtlaan 2"
-			},
-			"geometry": {
-				"coordinates": [
-			                    4.480909109115601,
-        				  52.19118672930955
 				],
 				"type": "Point"
 			}
