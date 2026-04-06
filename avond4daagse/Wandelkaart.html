@@ -9,10 +9,11 @@
 <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/smoothness/jquery-ui.css">
 <!-- Include Mapbox GL JS CSS -->
-<script src="https://api.mapbox.com/mapbox.js/plugins/turf/v7.3.0/turf.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.js"></script>
-<!-- Include Turf: A modular geospatial engine -->
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.css" rel="stylesheet" />
+<!-- Include Turf: A modular geospatial engine -->
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@7.3.0/turf.min.js"></script>
+
 <style>
 
 	body { margin: 0; padding: 0; }
@@ -50,7 +51,9 @@
 		background-size: cover;
 		width: 50px;
 		height: 50px;
-		border-radius: 50%;
+		border-radius: 5%;
+		font-size: 2em;
+		text-align: center;
 		cursor: pointer; 
 	}
 	
@@ -183,6 +186,11 @@
 	
 	.menu-listing li a:hover { background-color: #262626;color: #fff;transition: 0.5s; }
 
+	/* Edit Markers Menu */
+
+
+	#editMarkersMenu { position: absolute; top: 25px; left: 10px; z-index: 1; background: white; display: none;
+
 	/* End */
 
 
@@ -205,21 +213,39 @@
 	<li><div><a href=".">home</a></div></li>
 </ul></nav>
 
+<!-- Edit Markers Menu --> 
+<div id='editMarkersMenu'>
+    <button id='add-marker'>Add Marker</button>
+    <button id='save-markers'>Save Markers to JSON</button>
+    <button id='load-markers'>Load Markers from JSON</button>
+    <textarea id='json-output' rows='10' cols='30' readonly></textarea>
+</div>
+
 <!-- Map --> 
 <div id="map"></div>
 
 <script>
-var debug = false;
+
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFydGthcHRlaW4iLCJhIjoiY2s1bXIycWZ0MGhkNjNycWk1Mm95ZWFmciJ9.g7LB4JvkixAv5vbJWpJhrw';
 
 const getUrl = window.location
-const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1] + "/" + 2025;
+const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1] + "/" + 2026;
 const urlParams = new URLSearchParams(getUrl.search)
 
 
 // Some switches to show (or not show) e.g. Verkeersregelaar
 var showMarkers = new Array();
+var editMarkers = false;
+if (urlParams.has('editMarkers')) {
+	editMarkers = true;
+	const menu = document.getElementById('editMarkersMenu');
+    menu.style.display = true ? 'block' : 'none';
+}
+var debug = false;
+if (urlParams.has('debug')) {
+	debug = true;
+}
 
 if (urlParams.has('Verkeersregelaar')) {
 	showMarkers.push('Verkeersregelaar');
@@ -298,6 +324,13 @@ map.addControl(
 		trackUserLocation: true
 	})
 );
+
+// Add the on-click event listener so to get Long and Lat 
+map.on('click', (e) => {
+      const { lng, lat } = e.lngLat;
+      console.log(`Longitude: ${lng}, Latitude: ${lat}`);
+      alert(`You clicked at longitude: ${lng}, latitude: ${lat}`);
+    });
 
 // Toggle the notification (direction) markers
 // based on zoom level...
@@ -418,7 +451,8 @@ function addLayerData(route) {
 function addRoute(route) {
 
 	// Calculate the route distance
-	var routeDistance = turf.lineDistance(route.geoJsonData_Route.features[0]).toFixed(1).toLocaleString();
+	// var routeDistance = turf.lineDistance(route.geoJsonData_Route.features[0]).toFixed(1).toLocaleString();
+	var routeDistance = turf.length(route.geoJsonData_Route.features[0],{units: 'kilometers'}).toFixed(1).toLocaleString();
 	// Add the menuItem for this route...
 	route.menuItem = route.label + " (" + routeDistance + " KM)";
 	route.layerID = route.label
@@ -495,6 +529,14 @@ function addLayerMenuItem(route)
 //	layers.appendChild(route.link);
 };
 
+// Update marker data in the array
+function updateMarkerData(marker, lng, lat) {
+  const index = showMarkers.findIndex(m => m.marker === marker);
+  if (index !== -1) {
+	showMarkers[index].lng = lng;
+	showMarkers[index].lat = lat;
+  }
+}
 
 // Draw the Map Matching notifications as a new layer on the map
 function addNotifications(route) {
@@ -505,8 +547,9 @@ function addNotifications(route) {
 			// create a HTML element for each feature
 			var el = document.createElement('div');
 		
-			el.className = route.layerID + ' marker zoom' + marker.properties['zoom-level']
-		
+			el.className = route.layerID + ' marker zoom' + marker.properties['zoom-level'];
+			el.innerHTML = '<div>' + marker.id + '</div>';
+			
 			switch (marker.properties['marker-symbol']) {
 				case 'N':
 					el.id = 'markerN';
@@ -523,12 +566,20 @@ function addNotifications(route) {
 				"Class: " + el.className + " ID: " + el.id);
 			}
 			// make a marker for each feature and add to the map
-			new mapboxgl.Marker(el)
+			const markerIcon = new mapboxgl.Marker({element: el, draggable: editMarkers})
 				.setLngLat(marker.geometry.coordinates)
 				.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
 				.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
 				.setRotationAlignment("map")
 				.addTo(map);
+			if (editMarkers) {
+				// Update marker position when dragged
+				markerIcon.on('dragend', () => {
+					const { lng, lat } = markerIcon.getLngLat();
+					updateMarkerData(markerIcon, lng, lat);
+				});
+			}
+	  
 			console.log("Marker " + marker.id + " " + marker.properties['marker-symbol'] + " successfully added.");
 		}
 		else {
@@ -538,6 +589,62 @@ function addNotifications(route) {
 		}
 	});
 }
+
+// Add a marker at a location
+function addMarker(lngLat) {
+  const marker = new mapboxgl.Marker({ draggable: true })
+	.setLngLat(lngLat)
+	.addTo(map);
+
+  // Update marker position when dragged
+  marker.on('dragend', () => {
+	const { lng, lat } = marker.getLngLat();
+	updateMarkerData(marker, lng, lat);
+  });
+
+  // Add to markers array
+  markers.push({
+	marker,
+	lng: lngLat.lng,
+	lat: lngLat.lat
+  });
+}
+
+// Add marker on click
+map.on('click', (e) => {
+  addMarker(e.lngLat);
+});
+
+// Add marker button
+document.getElementById('add-marker').addEventListener('click', () => {
+  const center = map.getCenter();
+  addMarker(center);
+});
+
+// Save markers to JSON
+document.getElementById('save-markers').addEventListener('click', () => {
+  const json = JSON.stringify(route.geoJsonData_Notifications.features, null, 2);
+  document.getElementById('json-output').value = json;
+  // To download as a file (client-side only)
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'markers.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Load markers from JSON (simulated)
+document.getElementById('load-markers').addEventListener('click', () => {
+  const json = document.getElementById('json-output').value;
+  if (!json) return;
+  const loadedMarkers = JSON.parse(json);
+  loadedMarkers.forEach(m => {
+	addMarker([m.lng, m.lat]);
+  });
+});
+
 
 if (debug == true) {
 	
