@@ -191,6 +191,35 @@
 
 	#editMarkersMenu { position: absolute; top: 25px; left: 10px; z-index: 1; background: white; display: none;
 
+#marker-edit-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+#marker-edit-modal div {
+    margin-bottom: 10px;
+}
+
+#marker-edit-modal label {
+    display: inline-block;
+    width: 120px;
+}
+
+#marker-edit-modal input, #marker-edit-modal select {
+    width: 200px;
+    padding: 5px;
+}
+
+					  
 	/* End */
 
 
@@ -221,6 +250,58 @@
     <textarea id='json-output' rows='10' cols='30' readonly></textarea>
 </div>
 
+<!-- Marker Edit Modal -->
+<div id="marker-edit-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+    <h2>Edit Marker</h2>
+    <form id="marker-edit-form">
+        <div>
+            <label for="marker-id">ID:</label>
+            <input type="text" id="marker-id" readonly />
+        </div>
+        <div>
+            <label for="marker-type">Type:</label>
+            <input type="text" id="marker-type" value="Feature" readonly />
+        </div>
+        <div>
+            <label for="marker-lng">Longitude:</label>
+            <input type="number" id="marker-lng" step="0.000001" />
+        </div>
+        <div>
+            <label for="marker-lat">Latitude:</label>
+            <input type="number" id="marker-lat" step="0.000001" />
+        </div>
+        <div>
+            <label for="marker-title">Title:</label>
+            <input type="text" id="marker-title" />
+        </div>
+        <div>
+            <label for="marker-description">Description:</label>
+            <input type="text" id="marker-description" />
+        </div>
+        <div>
+            <label for="marker-symbol">Marker Symbol:</label>
+            <select id="marker-symbol">
+                <option value="Start">Start</option>
+                <option value="Finish">Finish</option>
+                <option value="Verkeersregelaar">Verkeersregelaar</option>
+                <option value="LetOp">LetOp</option>
+                <option value="Sponsor">Sponsor</option>
+            </select>
+        </div>
+        <div>
+            <label for="marker-zoom-level">Zoom Level:</label>
+            <select id="marker-zoom-level">
+                <option value="14">14</option>
+                <option value="16">16</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px;">
+            <button type="button" id="save-marker-edits">Save</button>
+            <button type="button" id="cancel-marker-edits">Cancel</button>
+        </div>
+    </form>
+</div>
+	
 <!-- Map --> 
 <div id="map"></div>
 
@@ -463,6 +544,69 @@ function setInactiveRoute(route) {
 };
 
 function renderMarkers() {
+    if (!activeRouteObject || !activeRouteObject.geoJsonData_Notifications) {
+        return;
+    }
+
+    // Remove all existing markers for the active route from the map
+    const existingMarkers = document.querySelectorAll('.' + activeRouteObject.layerID);
+    existingMarkers.forEach(marker => marker.remove());
+
+    // Re-add all markers from the GeoJSON
+    activeRouteObject.geoJsonData_Notifications.features.forEach(marker => {
+        if (showMarkers.includes(marker.properties['marker-symbol'])) {
+            const el = document.createElement('div');
+            el.className = activeRouteObject.layerID + ' marker zoom' + marker.properties['zoom-level'];
+            el.id = 'marker' + marker.properties['marker-symbol'];
+            el.innerHTML = '<div>' + marker.id + '</div>';
+
+            const markerIcon = new mapboxgl.Marker({ element: el, draggable: editMarkers })
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(new mapboxgl.Popup({ offset: 25 })
+                    .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+                .setRotationAlignment("map")
+                .addTo(map);
+
+            // Add click event to open the edit modal
+            el.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent map click events
+                openMarkerEditModal(marker);
+            });
+
+            if (editMarkers) {
+                markerIcon.on('dragend', () => {
+                    const { lng, lat } = markerIcon.getLngLat();
+                    const featureIndex = activeRouteObject.geoJsonData_Notifications.features.findIndex(
+                        f => f.id === marker.id
+                    );
+                    if (featureIndex !== -1) {
+                        activeRouteObject.geoJsonData_Notifications.features[featureIndex].geometry.coordinates = [lng, lat];
+                    }
+                });
+            }
+        }
+    });
+}
+
+function openMarkerEditModal(marker) {
+    // Populate the form with the marker's data
+    document.getElementById('marker-id').value = marker.id;
+    document.getElementById('marker-type').value = marker.type;
+    document.getElementById('marker-lng').value = marker.geometry.coordinates[0];
+    document.getElementById('marker-lat').value = marker.geometry.coordinates[1];
+    document.getElementById('marker-title').value = marker.properties.title || '';
+    document.getElementById('marker-description').value = marker.properties.description || '';
+    document.getElementById('marker-symbol').value = marker.properties['marker-symbol'] || 'Sponsor';
+    document.getElementById('marker-zoom-level').value = marker.properties['zoom-level'] || '14';
+
+    // Show the modal
+    document.getElementById('marker-edit-modal').style.display = 'block';
+
+    // Store the marker reference for saving later
+    window.currentEditingMarker = marker;
+}
+	
+function renderMarkersOLD() {
     if (!activeRouteObject || !activeRouteObject.geoJsonData_Notifications) {
         return;
     }
@@ -736,6 +880,40 @@ document.getElementById('add-marker').addEventListener('click', () => {
   addMarker(center);
 });
 
+// Save marker edits
+document.getElementById('save-marker-edits').addEventListener('click', () => {
+    if (!window.currentEditingMarker) return;
+
+    // Update the marker's data
+    const marker = window.currentEditingMarker;
+    const featureIndex = activeRouteObject.geoJsonData_Notifications.features.findIndex(
+        f => f.id === marker.id
+    );
+
+    if (featureIndex !== -1) {
+        // Update the feature in the GeoJSON
+        activeRouteObject.geoJsonData_Notifications.features[featureIndex].geometry.coordinates = [
+            parseFloat(document.getElementById('marker-lng').value),
+            parseFloat(document.getElementById('marker-lat').value)
+        ];
+        activeRouteObject.geoJsonData_Notifications.features[featureIndex].properties.title = document.getElementById('marker-title').value;
+        activeRouteObject.geoJsonData_Notifications.features[featureIndex].properties.description = document.getElementById('marker-description').value;
+        activeRouteObject.geoJsonData_Notifications.features[featureIndex].properties['marker-symbol'] = document.getElementById('marker-symbol').value;
+        activeRouteObject.geoJsonData_Notifications.features[featureIndex].properties['zoom-level'] = document.getElementById('marker-zoom-level').value;
+
+        // Re-render the markers to reflect changes
+        renderMarkers();
+    }
+
+    // Hide the modal
+    document.getElementById('marker-edit-modal').style.display = 'none';
+});
+
+// Cancel marker edits
+document.getElementById('cancel-marker-edits').addEventListener('click', () => {
+    document.getElementById('marker-edit-modal').style.display = 'none';
+});
+	
 document.getElementById('save-markers').addEventListener('click', () => {
     if (!activeRouteObject || !activeRouteObject.geoJsonData_Notifications) {
         alert("No active route or markers to save!");
@@ -798,7 +976,13 @@ document.getElementById('load-markers-file').addEventListener('change', function
 });
 	
 
-
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('marker-edit-modal');
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
 
 if (debug == true) {
 	
