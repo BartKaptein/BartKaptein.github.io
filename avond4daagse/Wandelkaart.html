@@ -217,7 +217,7 @@
 <div id='editMarkersMenu'>
     <button id='add-marker'>Add Marker</button>
     <button id='save-markers'>Save Markers to JSON</button>
-    <button id='load-markers'>Load Markers from JSON</button>
+	<input type="file" id="load-markers-file" accept=".json" />
     <textarea id='json-output' rows='10' cols='30' readonly></textarea>
 </div>
 
@@ -234,9 +234,9 @@ const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.spl
 const urlParams = new URLSearchParams(getUrl.search)
 
 
-// Some switches to show (or not show) e.g. Verkeersregelaar
-var showMarkers = new Array();
+// Editing and debugging
 var editMarkers = false;
+	
 if (urlParams.has('editMarkers')) {
 	editMarkers = true;
 	const menu = document.getElementById('editMarkersMenu');
@@ -247,20 +247,27 @@ if (urlParams.has('debug')) {
 	debug = true;
 }
 
-if (urlParams.has('Verkeersregelaar')) {
-	showMarkers.push('Verkeersregelaar');
-}
+// Some switches to show (or not show) markers e.g. Verkeersregelaar
+var showMarkers = new Array();
+// The array containing the markers
+var markers = new Array();
+
 if (urlParams.has('NoMarkers')) {
 } else {
 	showMarkers.push('Start');
 	showMarkers.push('Finish');
 	showMarkers.push('Sponsor');	
-}
 	
+	if (urlParams.has('Verkeersregelaar')) {
+		showMarkers.push('Verkeersregelaar');
+	}
+}
 
 // Switch to show specific route
 var Routes = new Array();
 var activeRoute = ""	
+var activeRouteObject = null;
+
 if (urlParams.has('route')) {
 	_routes = urlParams.getAll('route')
 	for (_route of _routes){
@@ -327,10 +334,13 @@ map.addControl(
 
 // Add the on-click event listener so to get Long and Lat 
 map.on('click', (e) => {
+	// Only in debug mode!
+	if (debug == true) {
       const { lng, lat } = e.lngLat;
       console.log(`Longitude: ${lng}, Latitude: ${lat}`);
       alert(`You clicked at longitude: ${lng}, latitude: ${lat}`);
-    });
+	};
+});
 
 // Toggle the notification (direction) markers
 // based on zoom level...
@@ -369,34 +379,6 @@ map.on('load', function() {
 	//map.fitBounds(bounds);
 
 });
-// Callback function from the menu...
-//////////////////////////////////////
-function setActiveRoute(route) {
-	console.log("Activate Route: " + route.label);
-	// Make the selected route active
-	activeRoute = route.layerID
-	// Set the menu-item of the selected route active
-	route.link.className = 'active';
-	// Show the selected route notification items...
-	$( "."+route.layerID ).show();
-	// Show the route
-	map.setLayoutProperty(route.layerID, 'visibility', 'visible');
-	// Zoom to the route
-	map.fitBounds(route.bbox);
-};
-
-// Callback function from the menu...
-//////////////////////////////////////
-function setInactiveRoute(route) {
-	if (typeof route.link !== 'undefined') {
-		// Set the menu-item to not-active
-		route.link.className = '';
-		// Hide the non-selected route notification items...
-		$( "."+route.layerID ).hide();
-		// Hide the non-selected route
-		map.setLayoutProperty(route.layerID, 'visibility', 'none');
-	}
-};
 
 function addLayerData(route) {
 	$.when(
@@ -445,8 +427,80 @@ function addLayerData(route) {
 	});
 }
 
+// Callback function from the menu...
+//////////////////////////////////////
+function setActiveRoute(route) {
+	console.log("Activate Route: " + route.label);
+	// Make the selected route active
+	activeRoute = route.layerID
+	activeRouteObject = route;
+	// Set the menu-item of the selected route active
+	route.link.className = 'active';
+	// Show the selected route notification items...
+	$( "."+route.layerID ).show();
+	// Show the route
+	map.setLayoutProperty(route.layerID, 'visibility', 'visible');
+	// Zoom to the route
+	map.fitBounds(route.bbox);
+	// Re-render markers for the new active route
+    renderMarkers();
+};
 
+// Callback function from the menu...
+//////////////////////////////////////
+function setInactiveRoute(route) {
+	if (typeof route.link !== 'undefined') {
+		// Set the menu-item to not-active
+		route.link.className = '';
+		// Hide the non-selected route notification items...
+		$( "."+route.layerID ).hide();
+		// Hide the non-selected route
+		map.setLayoutProperty(route.layerID, 'visibility', 'none');
+		// Remove markers for this route from the map
+        const markers = document.querySelectorAll('.' + route.layerID);
+        markers.forEach(marker => marker.remove());
+	}
+};
 
+function renderMarkers() {
+    if (!activeRouteObject || !activeRouteObject.geoJsonData_Notifications) {
+        return;
+    }
+
+    // Remove all existing markers for the active route from the map
+    const existingMarkers = document.querySelectorAll('.' + activeRouteObject.layerID);
+    existingMarkers.forEach(marker => marker.remove());
+
+    // Re-add all markers from the GeoJSON
+    activeRouteObject.geoJsonData_Notifications.features.forEach(marker => {
+        if (showMarkers.includes(marker.properties['marker-symbol'])) {
+            const el = document.createElement('div');
+            el.className = activeRouteObject.layerID + ' marker zoom' + marker.properties['zoom-level'];
+            el.id = 'marker' + marker.properties['marker-symbol'];
+            el.innerHTML = '<div>' + marker.id + '</div>';
+
+            const markerIcon = new mapboxgl.Marker({ element: el, draggable: editMarkers })
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(new mapboxgl.Popup({ offset: 25 })
+                    .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+                .setRotationAlignment("map")
+                .addTo(map);
+
+            if (editMarkers) {
+                markerIcon.on('dragend', () => {
+                    const { lng, lat } = markerIcon.getLngLat();
+                    // Update the marker's coordinates in the GeoJSON
+                    const featureIndex = activeRouteObject.geoJsonData_Notifications.features.findIndex(
+                        f => f.id === marker.id
+                    );
+                    if (featureIndex !== -1) {
+                        activeRouteObject.geoJsonData_Notifications.features[featureIndex].geometry.coordinates = [lng, lat];
+                    }
+                });
+            }
+        }
+    });
+}
 // Draw the Map Matching route as a new layer on the map
 function addRoute(route) {
 
@@ -485,7 +539,7 @@ function addRoute(route) {
 	};
 }
 
-// Add Menu
+// Add Hamburger Menu
 /////////////////////////////////////////////////////////////////////
 
 function addLayerMenuItem(route)
@@ -529,6 +583,9 @@ function addLayerMenuItem(route)
 //	layers.appendChild(route.link);
 };
 
+// Functions to add and edit markers
+///////////////////////////////////////
+	
 // Update marker data in the array
 function updateMarkerData(marker, lng, lat) {
   const index = showMarkers.findIndex(m => m.marker === marker);
@@ -538,8 +595,16 @@ function updateMarkerData(marker, lng, lat) {
   }
 }
 
-// Draw the Map Matching notifications as a new layer on the map
 function addNotifications(route) {
+    // The GeoJSON is already loaded into route.geoJsonData_Notifications
+    // Just re-render the markers for this route
+    if (route === activeRouteObject) {
+        renderMarkers();
+    }
+}
+	
+// Draw the Map Matching notifications as a new layer on the map
+function addNotificationsOLD(route) {
 
 	// add markers to map
 	route.geoJsonData_Notifications.features.forEach(function(marker) {
@@ -590,8 +655,58 @@ function addNotifications(route) {
 	});
 }
 
-// Add a marker at a location
+function getNextMarkerId(features) {
+    if (!features || features.length === 0) {
+        return 1; // Start from 1 if no markers exist
+    }
+
+    // Find the maximum numeric ID in the features array
+    const maxId = Math.max(
+        ...features
+            .map(feature => {
+                // Handle cases where ID is a string (e.g., "1") or number
+                const id = parseInt(feature.id, 10);
+                return isNaN(id) ? 0 : id;
+            })
+    );
+
+    return maxId + 1;
+}
+	
 function addMarker(lngLat) {
+    if (!activeRouteObject || !activeRouteObject.geoJsonData_Notifications) {
+        alert("No active route to add markers to!");
+        return;
+    }
+
+	// Get the next available ID
+    const nextId = getNextMarkerId(activeRouteObject.geoJsonData_Notifications.features);
+
+    // Create a new GeoJSON feature for the marker
+    const newMarker = {
+        type: "Feature",
+        id: nextId,
+        geometry: {
+            type: "Point",
+            coordinates: [lngLat.lng, lngLat.lat]
+        },
+        properties: {
+            title: "New Marker",
+            description: "",
+            "marker-symbol": "Sponsor", // Default
+            "zoom-level": 14 // Default
+        }
+    };
+
+    // Add the new marker to the GeoJSON
+    activeRouteObject.geoJsonData_Notifications.features.push(newMarker);
+
+    // Re-render all markers
+    renderMarkers();
+}
+	
+// Add a marker at a location
+function addMarkerOLD(lngLat) {
   const marker = new mapboxgl.Marker({ draggable: true })
 	.setLngLat(lngLat)
 	.addTo(map);
@@ -611,9 +726,9 @@ function addMarker(lngLat) {
 }
 
 // Add marker on click
-map.on('click', (e) => {
-  addMarker(e.lngLat);
-});
+// map.on('click', (e) => {
+//  addMarker(e.lngLat);
+//});
 
 // Add marker button
 document.getElementById('add-marker').addEventListener('click', () => {
@@ -621,29 +736,68 @@ document.getElementById('add-marker').addEventListener('click', () => {
   addMarker(center);
 });
 
-// Save markers to JSON
 document.getElementById('save-markers').addEventListener('click', () => {
-  const json = JSON.stringify(route.geoJsonData_Notifications.features, null, 2);
-  document.getElementById('json-output').value = json;
-  // To download as a file (client-side only)
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'markers.json';
-  a.click();
-  URL.revokeObjectURL(url);
+    if (!activeRouteObject || !activeRouteObject.geoJsonData_Notifications) {
+        alert("No active route or markers to save!");
+        return;
+    }
+
+    // Create a FeatureCollection with only the markers for the active route
+    const markersToSave = {
+        type: "FeatureCollection",
+        features: activeRouteObject.geoJsonData_Notifications.features
+    };
+
+    const json = JSON.stringify(markersToSave, null, 2);
+    document.getElementById('json-output').value = json;
+
+    // Download the file
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = activeRouteObject.label + '_Markers.json';
+    a.click();
+    URL.revokeObjectURL(url);
 });
 
-// Load markers from JSON (simulated)
-document.getElementById('load-markers').addEventListener('click', () => {
-  const json = document.getElementById('json-output').value;
-  if (!json) return;
-  const loadedMarkers = JSON.parse(json);
-  loadedMarkers.forEach(m => {
-	addMarker([m.lng, m.lat]);
-  });
+document.getElementById('load-markers-file').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file || !activeRouteObject) {
+        alert("No file selected or no active route!");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const loadedData = JSON.parse(e.target.result);
+
+            // Validate that the loaded data is a FeatureCollection
+            if (!loadedData.type || loadedData.type !== "FeatureCollection" || !loadedData.features) {
+                alert("Invalid file: Expected a GeoJSON FeatureCollection with 'features' array.");
+                return;
+            }
+
+            // Replace the markers for the active route
+            activeRouteObject.geoJsonData_Notifications.features = loadedData.features;
+
+            // Re-render markers on the map
+            renderMarkers();
+
+            // Optional: Display the loaded JSON in the textarea
+            document.getElementById('json-output').value = JSON.stringify(loadedData, null, 2);
+
+        } catch (error) {
+            alert("Error parsing JSON: " + error.message);
+        }
+    };
+    reader.readAsText(file);
+    // Clear the file input to allow re-uploading the same file
+    event.target.value = '';
 });
+	
+
 
 
 if (debug == true) {
