@@ -558,22 +558,22 @@ function renderMarkers() {
             const el = document.createElement('div');
             el.className = activeRouteObject.layerID + ' marker zoom' + marker.properties['zoom-level'];
             el.id = 'marker' + marker.properties['marker-symbol'];
-            el.innerHTML = '<div>' + marker.id + '</div>';
-
+			if (editMarkers) {
+				el.innerHTML = '<div>' + marker.id + '</div>';
+			}
             const markerIcon = new mapboxgl.Marker({ element: el, draggable: editMarkers })
                 .setLngLat(marker.geometry.coordinates)
                 .setPopup(new mapboxgl.Popup({ offset: 25 })
                     .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
                 .setRotationAlignment("map")
                 .addTo(map);
+			if (editMarkers) {
+				// Add click event to open the edit modal
+				el.addEventListener('click', (e) => {
+					e.stopPropagation(); // Prevent map click events
+					openMarkerEditModal(marker);
+				});
 
-            // Add click event to open the edit modal
-            el.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent map click events
-                openMarkerEditModal(marker);
-            });
-
-            if (editMarkers) {
                 markerIcon.on('dragend', () => {
                     const { lng, lat } = markerIcon.getLngLat();
                     const featureIndex = activeRouteObject.geoJsonData_Notifications.features.findIndex(
